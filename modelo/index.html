@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Placar da Câmara</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Vidaloka&family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+/* VOICE everyday civic guide, playful but exact, no verdicts
+   IDEA the Ranking da Direita panel: navy plenário board with gold-lit seats, cards on cream paper
+   PICTURE a 513-seat plenário in the hero, each seat a deputy lit by presence; turquoise marks what is out of the ordinary
+   COLOUR navy #061531 bands, gold #DDA544 numbers, cream #F4F1EA paper, red #C2564D for "Não", turquoise #12B5CB only for "fora do padrão"
+   TYPE Vidaloka (titles) + Montserrat (text)
+   LAYOUT phone first: navy header, hero board full width, cream sections with white cards; 960px max on laptop */
+:root{color-scheme:light;--navy:#061531;--navy2:#0B1F45;--navy3:#122a5c;--gold:#DDA544;--gold2:#F0C878;--gold3:#B98533;--cream:#F4F1EA;--paper:#fffdf8;--ink:#0B1F45;--mut:#5d6680;--line:#e3dccd;--red:#C2564D;--fp:#12B5CB;--fpd:#0a7f90;--fpbg:#dff6f9}
+*{box-sizing:border-box;min-width:0}
+html,body{margin:0;background:var(--cream);color:var(--ink)}
+body{font:16.5px/1.55 Montserrat,system-ui,sans-serif;overflow-x:clip}
+h1,h2,h3{font-family:Vidaloka,Georgia,serif;font-weight:400;letter-spacing:-.01em;line-height:1.1;margin:0;text-wrap:balance}
+h1{font-size:clamp(32px,7vw,52px)}
+h2{font-size:clamp(26px,5vw,36px);margin-bottom:10px}
+h3{font-size:20px;margin-bottom:6px}
+p{margin:0 0 12px}
+a{color:var(--gold3);text-underline-offset:3px;font-weight:600}
+b,strong{font-weight:700}
+.w{max-width:960px;margin:0 auto;padding:0 max(16px,4vw)}
+.top{background:var(--navy);color:var(--cream);padding:14px 0;position:sticky;top:0;z-index:5;border-bottom:2px solid var(--gold)}
+.top .w{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:6px 16px}
+.brand{font:400 22px Vidaloka,serif;color:var(--gold);text-decoration:none}
+.brand small{display:block;font:600 11px Montserrat,sans-serif;color:var(--cream);opacity:.75;letter-spacing:.04em}
+.nav{display:flex;gap:4px 14px;flex-wrap:wrap}
+.nav a{color:var(--cream);font-weight:600;font-size:14px;text-decoration:none;padding:8px 0}
+.nav a:hover{color:var(--gold2)}
+.hero{background:radial-gradient(120% 90% at 50% 0%,var(--navy3),var(--navy) 70%);color:var(--cream);padding:30px 0 34px}
+.hero h1{color:var(--cream)}
+.hero h1 em{font-style:normal;color:var(--gold)}
+.hero .lede{color:#c9d2e6;font-size:17px;margin-top:12px;max-width:62ch}
+.board{margin-top:20px;background:var(--ink);border:1px solid rgba(221,165,68,.35);border-radius:18px;padding:14px 12px 12px}
+.board svg{display:block;width:100%;height:auto}
+.seat{cursor:pointer;transition:transform .2s}
+.seat:hover{stroke:#fff;stroke-width:1.5}
+.leg{display:flex;flex-wrap:wrap;gap:6px 16px;justify-content:center;font-size:13px;color:#c9d2e6;margin-top:8px}
+.leg i{display:inline-block;width:11px;height:11px;border-radius:50%;margin-right:6px;vertical-align:-1px}
+.how{background:rgba(221,165,68,.14);border:1px solid rgba(221,165,68,.4);color:var(--cream);border-radius:12px;padding:12px 14px;font-size:15px;margin-top:16px}
+.how a{color:var(--gold2)}
+.lede{font-size:17px;color:var(--mut);margin-top:8px}
+.sec{padding:30px 0;border-top:1px solid var(--line)}
+.sec>h2:first-child,.sec>h2{position:relative}
+.f{display:grid;grid-template-columns:minmax(0,1fr);gap:10px;margin:14px 0 8px}
+@media(min-width:620px){.f{grid-template-columns:minmax(0,2fr) minmax(0,1fr) minmax(0,1fr)}}
+input,select{font:16px Montserrat,sans-serif;min-height:48px;padding:0 14px;border:1.5px solid #cfc5ae;border-radius:12px;background:#fff;color:var(--ink);width:100%}
+input:focus-visible,select:focus-visible,a:focus-visible,button:focus-visible,summary:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+.cnt{font-size:14px;color:var(--mut);margin:6px 0}
+.list{list-style:none;margin:0;padding:0;background:var(--paper);border:1px solid var(--line);border-radius:16px;overflow:hidden}
+.item{display:grid;grid-template-columns:46px minmax(0,1fr) auto;gap:12px;align-items:center;padding:12px 14px;border-bottom:1px solid var(--line)}
+.item:last-child{border-bottom:0}
+.av{width:46px;height:46px;border-radius:50%;display:grid;place-items:center;background:var(--navy);color:var(--gold);font:400 17px Vidaloka,serif;border:2px solid var(--gold)}
+.item a.nm{font-weight:700;color:var(--ink);text-decoration:none;display:block;font-size:16.5px;line-height:1.25}
+.item a.nm:hover{color:var(--gold3)}
+.sm{font-size:13.5px;color:var(--mut)}
+.pr{text-align:right;font-size:13px;white-space:nowrap}
+.pr a{font-weight:800;font-size:16px}
+.btn{font:700 15px Montserrat,sans-serif;min-height:48px;padding:0 20px;border-radius:999px;border:2px solid var(--navy);background:var(--navy);color:var(--gold);cursor:pointer;margin-top:14px}
+.btn:hover{background:var(--navy3)}
+.back{display:inline-block;padding:12px 0;font-weight:700;color:var(--gold3)}
+.card{background:var(--paper);border:1px solid var(--line);border-radius:18px;padding:18px;margin-top:16px;box-shadow:0 1px 0 rgba(6,21,49,.04)}
+.why{font-size:14.5px;color:var(--mut);margin:4px 0 12px}
+.scroll{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:15.5px}
+th,td{padding:10px 5px;border-bottom:1px solid var(--line);text-align:right;white-space:nowrap}
+th:first-child,td:first-child{text-align:left}
+th{font-size:13px;color:var(--mut);font-weight:700;white-space:normal;vertical-align:bottom}
+td a{font-weight:800}
+.bar{height:12px;background:#ece5d6;border-radius:6px;overflow:hidden;margin:5px 0 12px}
+.bar i{display:block;height:100%;background:linear-gradient(90deg,var(--gold3),var(--gold));border-radius:6px}
+.bar.o i{background:var(--fp)}
+.ln{display:flex;justify-content:space-between;gap:10px;font-size:15.5px;align-items:baseline;flex-wrap:wrap}
+.ln b,.ln a{white-space:nowrap}
+.vote{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:6px 12px;padding:12px 0;border-bottom:1px solid var(--line)}
+.vote:last-child{border-bottom:0}
+.vote.o{background:var(--fpbg);margin:0 -10px;padding:12px 10px;border-radius:10px;border-bottom-color:transparent}
+.vt{font-size:15.5px;line-height:1.35}
+.vm{font-size:13px;color:var(--mut);grid-column:1}
+.tag{align-self:start;font:800 14px Montserrat,sans-serif;padding:6px 10px;border-radius:10px;white-space:nowrap;text-align:center;min-width:96px}
+.tS{background:var(--navy);color:var(--gold)}.tN{background:var(--red);color:#fff}.tO{background:#e7e1f3;color:#43337a}.tA,.tP,.t-{background:#ece5d6;color:var(--mut)}
+.chips,.subs{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0 14px}
+.chip{font:700 14px Montserrat,sans-serif;min-height:44px;padding:0 15px;border-radius:999px;border:1.5px solid #cfc5ae;background:#fff;color:var(--ink);cursor:pointer}
+.chip[aria-pressed=true]{background:var(--navy);border-color:var(--navy);color:var(--gold)}
+.subs .chip{min-height:40px;font-size:13px}
+.pboard{background:var(--navy);border-radius:18px;padding:16px;color:var(--cream)}
+.pboard .chip{background:transparent;color:var(--cream);border-color:rgba(221,165,68,.5)}
+.pboard .chip[aria-pressed=true]{background:var(--gold);color:var(--navy);border-color:var(--gold)}
+.pair{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:6px 12px;padding:14px 0;border-top:1px solid rgba(221,165,68,.25)}
+.pair .nm{font:400 19px Vidaloka,serif;color:var(--cream)}
+.pair .val{font:400 30px Vidaloka,serif;color:var(--gold);white-space:nowrap;text-align:right}
+.pair .val a{color:var(--gold);text-decoration:none}
+.seats{grid-column:1/-1;display:grid;grid-template-columns:repeat(50,minmax(0,1fr));gap:2px}
+.seats i{aspect-ratio:1;border-radius:50%;background:#1b3463}
+.seats i.on{background:var(--gold);box-shadow:0 0 5px rgba(221,165,68,.6)}
+@media(max-width:600px){.seats{grid-template-columns:repeat(25,minmax(0,1fr))}}
+.pair .sm{color:#aeb8d0;grid-column:1/-1}
+dl{margin:0;display:grid;grid-template-columns:minmax(0,1fr);gap:0 24px}
+@media(min-width:760px){dl{grid-template-columns:repeat(2,minmax(0,1fr))}}
+dt{font-family:Vidaloka,serif;font-size:19px;margin-top:16px;color:var(--navy)}
+dd{margin:2px 0 0}
+.mx td,.mx th{font-size:13px;padding:6px 5px;text-align:center}
+.mx tbody th{text-align:left;position:sticky;left:0;background:var(--paper)}
+.mx td a{text-decoration:none;color:inherit;font-weight:700}
+details{margin-top:12px}
+summary{cursor:pointer;font-weight:700;color:var(--gold3);min-height:44px;display:flex;align-items:center}
+.grp{border:1px solid var(--line);border-radius:14px;margin-top:10px;background:#fff}
+.grp>summary{padding:12px 14px;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:4px 12px;color:var(--ink);list-style:none}
+.grp>summary::-webkit-details-marker{display:none}
+.grp>summary b{font:400 19px Vidaloka,serif}
+.grp>summary .n{font:400 26px Vidaloka,serif;color:var(--gold3);align-self:center;grid-row:1/3;grid-column:2;text-align:right}
+.grp>summary .d{font-size:13px;color:var(--mut);font-weight:500}
+.grp[open]>summary{border-bottom:1px solid var(--line)}
+.gb{padding:6px 14px 14px}
+.pi{padding:11px 0;border-bottom:1px solid var(--line)}
+.pi:last-child{border-bottom:0}
+.pi .h{display:flex;flex-wrap:wrap;gap:4px 10px;align-items:center;font-size:13px;color:var(--mut)}
+.pi .h a{font-weight:800;font-size:14.5px}
+.pi p{margin:4px 0 0;font-size:15.5px;line-height:1.4}
+.st{font:700 12px Montserrat,sans-serif;padding:3px 8px;border-radius:6px;background:#ece5d6;color:var(--mut)}
+.st1{background:var(--navy);color:var(--gold)}.st2{background:#e6eefb;color:#1d4c8f}.st3{background:#fbf0d8;color:#7a5800}
+.rule li{margin-bottom:10px}
+.sbox{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px;margin:12px 0}
+.sbtn{font:800 15px Montserrat,sans-serif;min-height:48px;padding:0 20px;border-radius:12px;border:0;background:var(--navy);color:var(--gold);cursor:pointer}
+.warn{border:1.5px solid var(--gold);background:#fbf3df;padding:12px 14px;border-radius:12px;font-size:15px;margin:12px 0}
+.rg{border:1px solid var(--line);border-radius:14px;margin-top:10px;background:#fff}
+.rg>summary{padding:12px 14px;display:grid;grid-template-columns:auto minmax(0,1fr);gap:4px 14px;color:var(--ink);list-style:none;cursor:pointer;font-weight:500}
+.rg>summary::-webkit-details-marker{display:none}
+.rg .big{font:400 30px Vidaloka,serif;color:var(--gold3);grid-row:1/3;align-self:center;text-align:center;min-width:52px}
+.rg .big small{display:block;font:600 11px Montserrat,sans-serif;color:var(--mut)}
+.rg.o .big{color:var(--fpd)}
+.rg[open]>summary{border-bottom:1px solid var(--line)}
+.who{font-size:13px;color:var(--mut);margin-top:4px}
+.who button{font:700 13px Montserrat,sans-serif;border:0;background:none;color:var(--gold3);padding:0;cursor:pointer;text-decoration:underline}
+.gtag{font:700 11.5px Montserrat,sans-serif;padding:2px 7px;border-radius:6px;background:#f3e7cc;color:var(--gold3)}
+.fp{display:inline-block;font:800 11.5px Montserrat,sans-serif;padding:2px 8px;border-radius:999px;background:var(--fp);color:var(--navy);white-space:nowrap;vertical-align:2px;cursor:help}
+.fpnote{border-left:4px solid var(--fp);background:var(--fpbg);padding:10px 12px;border-radius:8px;font-size:14.5px;margin:10px 0}
+.dhero{background:radial-gradient(120% 100% at 50% 0%,var(--navy3),var(--navy) 75%);color:var(--cream);border-radius:0 0 22px 22px;padding:20px 0 24px}
+.dhero h1{color:var(--cream)}
+.dhero .lede{color:#c9d2e6}
+.dhero .lede a,.dhero .back{color:var(--gold2)}
+.stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:16px}
+.stat{background:rgba(255,255,255,.06);border:1px solid rgba(221,165,68,.35);border-radius:14px;padding:12px 10px;text-align:center}
+.stat b{display:block;font:400 clamp(26px,7vw,38px) Vidaloka,serif;color:var(--gold);line-height:1}
+.stat span{display:block;font-size:12px;color:#c9d2e6;margin-top:6px;line-height:1.3}
+.stat.o{border-color:var(--fp);background:rgba(18,181,203,.14)}
+.stat.o b{color:var(--fp)}
+.dots{display:flex;flex-wrap:wrap;gap:3px;margin:6px 0 4px}
+.dots i{width:9px;height:9px;border-radius:50%;background:var(--gold)}
+.dots i.j{background:#cfc5ae}.dots i.n{background:transparent;border:1.5px solid var(--red)}
+.yr{padding:10px 0;border-bottom:1px solid var(--line)}
+.yr:last-child{border-bottom:0}
+footer{background:var(--navy);color:#c9d2e6;padding:26px 0;font-size:14px;margin-top:20px}
+footer b{color:var(--gold)}
+[hidden]{display:none!important}
+@media(max-width:600px){table{font-size:14px}th,td{padding:8px 4px}}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<header class="top"><div class="w"><a class="brand" href="#">Placar da Câmara<small>RANKING DA DIREITA</small></a>
+<nav class="nav"><a href="#busca">Deputados</a><a href="#buscar">Buscar</a><a href="#repetidas">Repetidas</a><a href="#partidos">Partidos</a></nav></div></header>
+
+<main id="home">
+<div class="hero"><div class="w">
+<h1>O que cada um dos <em>513 deputados</em> fez</h1>
+<p class="lede">Presença, propostas e votos de 2023 a 2026, com dados oficiais da Câmara dos Deputados. Cada cadeira abaixo é um deputado, colocado em ordem de presença no plenário em 2025. Toque numa cadeira para abrir a ficha dele.</p>
+<div class="board"><svg id="plen" viewBox="0 0 1000 520" role="img" aria-label="Plenário com 513 cadeiras"></svg>
+<div class="leg"><span style="flex-basis:100%;text-align:center">← menos presença · mais presença →</span><span><i style="background:#DDA544"></i>Presença comum</span><span><i style="background:#12B5CB"></i>Fora do padrão</span><span><i style="background:#2a3f6b"></i>Não estava no mandato em 2025</span></div></div>
+<p class="how">Toque em qualquer número sublinhado para abrir a página oficial de onde ele saiu. Na página de cada deputado, as propostas estão separadas em grupos fáceis de entender: <a href="#regra">veja como</a>. A cor <span class="fp">turquesa</span> marca o que sai do padrão em qualquer número: <a href="#padrao">entenda a regra</a>.</p>
+</div></div>
+<div class="w">
+
+<section class="sec" id="busca">
+<h2>Encontre um deputado</h2>
+<div class="f">
+<input id="q" type="search" placeholder="Digite o nome" aria-label="Nome do deputado" autocomplete="off">
+<select id="fu" aria-label="Estado"><option value="">Todos os estados</option></select>
+<select id="fp" aria-label="Partido"><option value="">Todos os partidos</option></select>
+</div>
+<p class="cnt" id="cnt"></p>
+<ul class="list" id="dl"></ul>
+<button class="btn" id="more">Mostrar mais deputados</button>
+</section>
+
+<section class="sec" id="buscar">
+<h2>Buscar por estado ou assunto</h2>
+<p>Digite um estado (como <i>Bahia</i> ou <i>BA</i>) ou um assunto (como <i>creche</i>, <i>BR-116</i>, <i>autismo</i>). Aparece tudo o que os deputados apresentaram de 2023 a 2026 sobre isso, e quem assinou.</p>
+<form class="sbox" id="sform" role="search"><input id="sq" type="search" placeholder="Estado ou assunto" aria-label="Estado ou assunto" autocomplete="off"><button class="sbtn" type="submit">Buscar</button></form>
+<div class="chips" id="sex"></div>
+<div id="sres"></div>
+<p class="sm">A busca olha o resumo oficial de cada proposta e as palavras-chave que a Câmara usa para indexar os projetos de lei. Para estado, procura o nome do estado ou a sigla (como "/BA") no resumo. Entram propostas de lei, pedidos de melhoria, perguntas e cobranças e homenagens. Ficam de fora os pedidos sobre a pauta, emendas e relatórios. Dica: digite só o começo da palavra para pegar variações (<i>autis</i> encontra autismo e autista). Na primeira busca, o site baixa cerca de 21 MB de dados; pode levar alguns segundos.</p>
+</section>
+
+<section class="sec" id="repetidas">
+<h2>Pedidos que voltam várias vezes</h2>
+<p>Aqui estão os casos em que o mesmo tipo de proposta, com o mesmo texto de resumo, foi apresentado mais de uma vez, com a contagem, as datas e quem assinou.</p>
+<div class="warn"><b>Projeto repetido não prova que a Câmara ignorou o assunto.</b> Muitas vezes vários deputados apresentam o mesmo pedido ao mesmo tempo, um deputado reapresenta para registrar de novo, a Câmara junta os projetos iguais para analisar tudo de uma vez ("tramitando em conjunto"), ou a resposta veio por outro caminho. A repetição só mostra que o assunto foi pedido de novo.</div>
+<div class="chips" id="rmin"><button class="chip" data-m="3" aria-pressed="true">3 vezes ou mais</button><button class="chip" data-m="2" aria-pressed="false">2 vezes ou mais</button></div>
+<input id="rq" type="search" placeholder="Filtrar por palavra ou estado" aria-label="Filtrar repetidas" autocomplete="off" style="margin-bottom:6px">
+<p class="cnt" id="rcnt"></p>
+<div id="rl"></div>
+<button class="btn" id="rmore">Mostrar mais</button>
+<p class="sm">Regra: mesmo tipo oficial (por exemplo, Indicação ou Projeto de Lei) e mesmo resumo oficial, ignorando acentos, pontuação e o trecho "e dá outras providências". Resumos genéricos ("Altera a Lei nº X", sem dizer para quê) e resumos vagos ("nas vias que especifica") ficam de fora, porque o mesmo texto pode esconder pedidos diferentes. Pedidos iguais para lugares diferentes contam como pedidos diferentes. Fonte: arquivos oficiais de proposições e autores de 2023 a 2026, Dados Abertos da Câmara.</p>
+</section>
+
+<section class="sec" id="votacoes">
+<h2>__N21__ votações que dividiram o plenário</h2>
+<p>São todas as votações principais de projetos em 2025 e 2026 em que o lado que perdeu teve pelo menos 20% dos votos. Na página de cada deputado aparece como ele votou em cada uma.</p>
+<div id="vl"></div>
+</section>
+
+<section class="sec" id="partidos">
+<h2>Quantas vezes os partidos votaram do mesmo lado</h2>
+<p>Em cada votação nominal do plenário, olhamos para que lado foi a maioria dos deputados de cada partido (Sim ou Não). Quando as duas maiorias foram para o mesmo lado, conta como "votaram do mesmo lado".</p>
+<div class="pboard"><div class="chips" role="group" aria-label="Quais votações" id="pch">
+<button class="chip" id="c-div" data-f="divididas" aria-pressed="true">Só votações divididas</button>
+<button class="chip" id="c-all" data-f="todas" aria-pressed="false">Todas as votações</button>
+</div>
+<p class="sm" style="color:#c9d2e6;margin:0">Cada bolinha é uma votação em cada 100. Acesa em dourado: os dois votaram do mesmo lado.</p>
+<div id="pl"></div></div>
+<p class="sm">"Centro" aqui é a soma de MDB, PSD, PP, União Brasil e Republicanos. O Missão tem um deputado e vota pelo partido desde 10/03/2026. Votação dividida: o lado que perdeu teve pelo menos 20% dos votos. Fonte: <a href="https://dadosabertos.camara.leg.br/swagger/api.html#staticfile">arquivos de votações dos Dados Abertos da Câmara</a>, 2023 a 2026.</p>
+<details><summary>Ver a tabela completa de todos os partidos</summary>
+<p class="sm">Porcentagem de todas as votações nominais do plenário (2023 a 2026) em que os dois partidos votaram do mesmo lado. Arraste para o lado para ver todas as colunas.</p>
+<div class="scroll"><table class="mx" id="mx"></table></div>
+</details>
+</section>
+
+<section class="sec" id="glossario">
+<h2>O que quer dizer cada palavra</h2>
+<dl>
+<dt>Plenário</dt><dd>A reunião em que todos os 513 deputados podem votar. É onde se decide se um projeto é aprovado na Câmara.</dd>
+<dt>Sessão deliberativa</dt><dd>Sessão do plenário em que há votações. A presença do deputado é contada nesses dias.</dd>
+<dt>Falta justificada</dt><dd>Ausência que o deputado explicou à Câmara, por exemplo por doença ou missão oficial.</dd>
+<dt>Votação nominal</dt><dd>Votação em que cada deputado registra o voto no painel eletrônico, e fica público quem votou como. Em votações simbólicas, ninguém registra o voto e não dá para saber o voto de cada um.</dd>
+<dt>Sim e Não</dt><dd>Sim é a favor do que está sendo votado. Não é contra.</dd>
+<dt>Obstrução</dt><dd>Quando o deputado registra que está obstruindo: é uma forma de ficar contra e tentar atrasar a votação.</dd>
+<dt>Abstenção</dt><dd>O deputado registra presença, mas não vota nem Sim nem Não.</dd>
+<dt>Art. 17</dt><dd>Quem preside a sessão normalmente não vota. Aparece assim na lista de votos.</dd>
+<dt>Orientação do Governo</dt><dd>Antes de cada votação, o líder do Governo diz como acha que os deputados devem votar.</dd>
+<dt>PL — Projeto de Lei</dt><dd>Proposta para criar ou mudar uma lei comum.</dd>
+<dt>PLP — Projeto de Lei Complementar</dt><dd>Proposta de lei sobre assuntos que a Constituição manda tratar em lei complementar, como regras de impostos e de gastos públicos. Precisa de mais votos para passar.</dd>
+<dt>PEC — Proposta de Emenda à Constituição</dt><dd>Proposta para mudar a Constituição. Precisa de 3 em cada 5 deputados, em duas votações (1º e 2º turno).</dd>
+<dt>PDL — Projeto de Decreto Legislativo</dt><dd>Decisão do Congresso que não precisa da assinatura do presidente. Serve, por exemplo, para aprovar acordos internacionais ou derrubar um decreto do governo.</dd>
+<dt>MPV — Medida Provisória</dt><dd>Regra que o presidente da República cria e que vale na hora, mas que o Congresso precisa aprovar em até 120 dias para continuar valendo.</dd>
+<dt>Requerimento</dt><dd>Pedido formal: pedir informações a um ministério, pedir urgência para um projeto, convidar alguém para falar. Não muda nenhuma lei.</dd>
+<dt>Indicação</dt><dd>Sugestão que o deputado envia a outro órgão, por exemplo a um ministério. Não tem força de lei.</dd>
+<dt>Moção</dt><dd>Mensagem oficial de apoio, aplauso, pesar ou repúdio sobre algum assunto. Também não muda nenhuma lei.</dd>
+</dl>
+</section>
+
+<section class="sec" id="padrao">
+<h2>O que é "fora do padrão"</h2>
+<p>A cor <span class="fp">turquesa</span> aparece quando um número fica muito longe do que é comum. A regra é a mesma para tudo no site e não é opinião: é uma conta estatística usada no mundo todo (a regra de Tukey).</p>
+<ol class="rule">
+<li>Pegamos o número de todos os deputados comparáveis e colocamos em ordem.</li>
+<li>Olhamos a faixa do meio, onde ficam metade deles: do primeiro quarto até o terceiro quarto.</li>
+<li>Se o número fica mais de uma vez e meia o tamanho dessa faixa abaixo ou acima dela, ele sai do padrão.</li>
+</ol>
+<p><b>Com quem cada um é comparado:</b> presença e votações, com todos os deputados que estavam no mandato o ano inteiro; votos junto com partidos e com o Governo, com os colegas do mesmo partido; quantidade de propostas por grupo, com todos os 513; votações divididas, com a maioria do partido atual dele; tabela de partidos, com as outras células da tabela; pedidos repetidos, com os outros pedidos repetidos 3 vezes ou mais.</p>
+<div class="warn"><b>Sair do padrão não é bom nem ruim.</b> Um deputado pode ter presença baixa por licença médica ou por ter assumido um ministério, e pode votar diferente do partido por convicção. A cor só aponta onde vale a pena olhar com mais atenção.</div>
+</section>
+
+<section class="sec" id="regra">
+<h2>Como as propostas foram separadas em grupos</h2>
+<p>Todo deputado apresenta muitos tipos de papel na Câmara: projetos de lei, pedidos de informação, homenagens, pedidos sobre a pauta. Para ficar fácil de entender, cada proposta de 2023 a 2026 foi colocada em um de cinco grupos. A regra é a mesma para todos os 513 deputados e usa só o que a própria Câmara registra: o tipo oficial da proposta e o texto do resumo (a "ementa").</p>
+<ol class="rule">
+<li><b>Homenagens.</b> Votos de parabéns, louvor ou pesar, moções de aplauso ou solidariedade, pedidos de sessão solene. Também entram aqui os projetos de lei cujo resumo cria uma data comemorativa (Dia, Semana ou Mês Nacional), dá nome a rodovia, ponte ou prédio, dá título de "Capital Nacional", põe alguém no Livro dos Heróis da Pátria, cria medalha ou prêmio, ou declara algo patrimônio cultural.</li>
+<li><b>Propostas de lei.</b> Os demais Projetos de Lei (PL), de Lei Complementar (PLP), Propostas de Emenda à Constituição (PEC), Projetos de Decreto Legislativo (PDL), de Resolução (PRC) e de Lei de Conversão (PLV). Aparecem nesta ordem: os que viraram lei, os aprovados na Câmara que esperam o Senado ou a sanção, os prontos para votação, os em análise e, por último, os arquivados ou retirados. A ordem mostra até onde cada projeto chegou, não se ele é bom ou ruim.</li>
+<li><b>Pedidos de melhoria para o país.</b> Indicações (sugestões enviadas ao governo, como uma obra ou um serviço) e sugestões de verba no Orçamento e na Lei de Diretrizes Orçamentárias.</li>
+<li><b>Perguntas e cobranças.</b> Pedidos de informação a ministérios e ao Tribunal de Contas da União, convocação de ministros e autoridades, pedidos de CPI e de quebra de sigilo em CPI, propostas de fiscalização e comissões externas.</li>
+<li><b>Outros.</b> Todo o resto do trabalho na Câmara: emendas a projetos (inclusive de outros deputados), relatórios e pareceres como relator, pedidos sobre a pauta e o andamento das votações (adiar, retirar de pauta, votação nominal, urgência), audiências públicas e eventos, moções de protesto ou repúdio e documentos de organização interna.</li>
+</ol>
+<p>Uma proposta entra em um grupo só. Quando um deputado assina junto com outros, a proposta conta para todos que assinaram, como faz a Câmara. Ao lado de cada proposta aparece se ele é o autor principal (o primeiro a assinar) ou coautor.</p>
+<p class="sm">Fonte: arquivos oficiais de proposições e de autores de 2023 a 2026 dos Dados Abertos da Câmara, baixados em __DATA__: __NPROP__ propostas e __NASS__ assinaturas dos deputados atuais. A soma de cada deputado fica igual ou muito perto do total da página oficial dele (na conferência de 15/11/2026, a diferença foi de poucas propostas por deputado).</p>
+</section>
+
+<section class="sec" id="fontes">
+<h2>De onde vêm os números</h2>
+<p><b>Presença, total de votações e total de propostas:</b> página oficial de cada deputado no site da Câmara, ano por ano, lida em __DATA__. Cada número leva à página exata.</p>
+<p><b>Projetos de lei e emendas à Constituição:</b> busca oficial dos Dados Abertos da Câmara por PL, PLP, PEC e PDL de 2023 a 2026 em que o deputado é autor ou coautor.</p>
+<p><b>Como votou e votos junto com cada partido:</b> arquivos oficiais de votações nominais do plenário dos Dados Abertos da Câmara (__NVOT__ votações de 01/02/2023 a __ULTIMA__). Os votos conferem um a um com a API oficial. O voto conta para o partido em que o deputado estava no dia.</p>
+<p><b>Conferência da presença (feita em 15/11/2026):</b> comparamos a presença da página oficial de cada deputado com outra fonte oficial, a lista de presença sessão por sessão dos Dados Abertos. O total de dias de sessão é igual nas duas (121 em 2025, 80 em 2026). Já o número de dias presentes da página costuma ser 1 a 4 dias maior, porque 21 sessões de 2023 a 2026 estão sem nenhuma presença registrada nos Dados Abertos (por exemplo 13/03, 27/11, 04/12 e 19/12 de 2025). O site usa o número da página oficial, que também mostra as faltas justificadas.</p>
+<p><b>Conferência dos votos (feita em 15/11/2026):</b> o número de votos de cada deputado vem dos arquivos de votações e confere com a lista oficial votação por votação da página dele (diferença de 0 a 3 votos no ano, nos casos conferidos). O resumo do topo da página do deputado mostra outro número ("Votações nominais em Plenário") que não corresponde ao total de votos e que não conseguimos explicar; por isso ele não é usado aqui.</p>
+</section>
+</div>
+</main>
+
+<main id="dep" hidden></main>
+
+<footer><div class="w"><p><b>Placar da Câmara · Ranking da Direita.</b> Dados públicos da Câmara dos Deputados (camara.leg.br e dadosabertos.camara.leg.br), atualizados em __DATA__ por um robô que confere os dados antes de publicar. Este site não dá nota nem opinião: só mostra os números.</p></div></footer>
+
+<script>
+{
+const DEPS=__DEPS__;const VY=__VY__;const RES=__RES__;const OFF=__OFF__;const PP=__PP__;const COD=__COD__;const VOT=__VOT__;const R=__RANK__;const MX=__MATRIX__;
+const Y=[2023,2024,2025,2026];
+const C='https://www.camara.leg.br';
+const nm={PL:'PL',NOVO:'Novo','MISSÃO':'Missão',PT:'PT',UNIÃO:'União',REPUBLICANOS:'Republicanos',PODE:'Podemos',SOLIDARIEDADE:'Solidariedade',AVANTE:'Avante',CIDADANIA:'Cidadania',REDE:'Rede',CENTRO:'Centro'};
+const N=s=>nm[s]||s;
+const fmt=n=>Number(n).toLocaleString('pt-BR');
+const pc=x=>x==null||x===''?null:Number(x);
+const f1=x=>x.toLocaleString('pt-BR',{maximumFractionDigits:1})+'%';
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const offM=new Map(OFF.map(r=>[r[0],r])),ppM=new Map(PP.map(r=>[r[0],r])),codM=new Map(COD);
+const vyM=new Map(VY.v.map(r=>[r[0],r]));const VYM=new Map(VY.v.map(r=>[r[0],r]));const VYT=VY.tot;const resM=new Map(RES.idx.map(r=>[r[0],r]));const SUBS=RES.subs;
+const L=DEPS.map(r=>{const o=offM.get(r[0]);const y=Y.map((yr,i)=>{const b=1+i*5;return {ano:yr,prop:o[b],vot:o[b+1],p:o[b+2],aj:o[b+3],an:o[b+4]}});
+  return {id:r[0],n:r[1],p:r[2],uf:r[3],vn:r[4],vt:r[5],S:r[6],No:r[7],O:r[8],A:r[9],fi:pc(r[10]),pt:pc(r[11]),pl:pc(r[12]),gv:pc(r[13]),y,pj:ppM.get(r[0])[3],cod:codM.get(r[0])||'',rs:resM.get(r[0])||[r[0],0,0,0,0,0,0,0]}});
+
+// ===== regra "fora do padrão": a mesma para todos os números (Tukey: abaixo de Q1 - 1,5×IQR ou acima de Q3 + 1,5×IQR)
+const qtl=(a,q)=>{const s=[...a].sort((x,y)=>x-y);const p=(s.length-1)*q,b=Math.floor(p);return s[b]+(s[Math.min(b+1,s.length-1)]-s[b])*(p-b)};
+const fence=a=>{if(a.length<5)return null;const q1=qtl(a,.25),q3=qtl(a,.75),r=q3-q1;return [q1-1.5*r,q3+1.5*r]};
+const outOf=(v,f)=>f&&v!=null&&(v<f[0]?'abaixo':v>f[1]?'acima':null);
+const FP=`<span class="fp" title="Muito acima ou muito abaixo do que é comum entre os deputados">fora do padrão</span>`;
+const modeTot=Y.map((_,k)=>{const c={};L.forEach(d=>{const y=d.y[k],t=y.p+y.aj+y.an;if(t)c[t]=(c[t]||0)+1});return +Object.entries(c).sort((a,b)=>b[1]-a[1])[0][0]});
+L.forEach(d=>{d.o={};d.y.forEach((y,k)=>{const t=y.p+y.aj+y.an;y.pct=t>=modeTot[k]*.5?100*y.p/t:null;const v=(vyMap(d.id)||[])[k+1];y.vpct=(t===modeTot[k]&&v!=null)?100*v/VYT[k]:null})});
+function vyMap(id){return VYM.get(id)}
+const F_pres=Y.map((_,k)=>fence(L.map(d=>d.y[k].pct).filter(v=>v!=null)));
+const F_vot=Y.map((_,k)=>fence(L.map(d=>d.y[k].vpct).filter(v=>v!=null)));
+const byP={};L.forEach(d=>(byP[d.p]=byP[d.p]||[]).push(d));
+const F_al={};for(const k of ['fi','pt','pl','gv']){F_al[k]={};for(const p in byP)F_al[k][p]=fence(byP[p].map(d=>d[k]).filter(v=>v!=null))}
+const F_grp=[1,2,3,4,5].map(i=>fence(L.map(d=>d.rs[i])));
+L.forEach(d=>{d.y.forEach((y,k)=>{y.op=outOf(y.pct,F_pres[k]);y.ov=outOf(y.vpct,F_vot[k])});
+  for(const k of ['fi','pt','pl','gv'])d.o[k]=outOf(d[k],F_al[k][d.p]);d.og=[1,2,3,4,5].map((i,j)=>outOf(d.rs[i],F_grp[j]))});
+// voto diferente da maioria do partido em cada uma das 21 votações (partido atual)
+const MAJ={};for(const p in byP){MAJ[p]=VOT.map((_,i)=>{let s=0,n=0;byP[p].forEach(d=>{const c=d.cod[i];if(c==='S')s++;else if(c==='N'||c==='O')n++});return s+n<3?null:s>n?'S':n>s?'N':null})}
+L.forEach(d=>{d.ov21=VOT.map((_,i)=>{const c=d.cod[i],m=MAJ[d.p][i];if(!m||!c)return false;const mine=c==='S'?'S':(c==='N'||c==='O')?'N':null;return mine&&mine!==m})});
+const ini=n=>n.replace(/^(Dr\.?|Dra\.?|Pr\.|Prof\.?|Professora?|Delegad[oa]|Coronel|Capitão|Cabo|General|Sargento|Pastor|Missionário|Defensor|Enfermeira)\s+/i,'').split(/\s+/).slice(0,2).map(w=>w[0]).join('').toUpperCase();
+const norm=s=>s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'');
+const presURL=(id,a)=>`${C}/deputados/${id}/presenca-plenario/${a}`;
+const votURL=(id,a)=>`${C}/deputados/${id}/votacoes-nominais-plenario/${a}`;
+const propURL=(id,a)=>`${C}/busca-portal?contextoBusca=BuscaProposicoes&pagina=1&order=data&abaEspecifica=true&q=autores.ideCadastro:%20${id}%20AND%20dataApresentacao:[${a}-01-01%20TO%20${a}-12-31]`;
+const projURL=id=>`https://dadosabertos.camara.leg.br/api/v2/proposicoes?idDeputadoAutor=${id}&ano=2023&ano=2024&ano=2025&ano=2026&siglaTipo=PL&siglaTipo=PLP&siglaTipo=PEC&siglaTipo=PDL&itens=100`;
+const A=(u,t)=>`<a href="${u}" target="_blank" rel="noopener">${t}</a>`;
+
+// filtros
+const fu=document.getElementById('fu'),fp=document.getElementById('fp'),q=document.getElementById('q');
+[...new Set(L.map(d=>d.uf))].sort().forEach(u=>fu.insertAdjacentHTML('beforeend',`<option>${u}</option>`));
+[...new Set(L.map(d=>d.p))].sort((a,b)=>N(a).localeCompare(N(b))).forEach(p=>fp.insertAdjacentHTML('beforeend',`<option value="${p}">${N(p)}</option>`));
+let lim=30;
+function row(d){const y=d.y[3],t=y.p+y.aj+y.an;
+  const pres=t?`<span class="sm">Presença em 2026</span><br>${A(presURL(d.id,2026),y.p+' de '+t+' dias')}${y.op?'<br>'+FP:''}`:`<span class="sm">Sem sessões em 2026</span>`;
+  return `<li class="item"><div class="av" aria-hidden="true">${ini(d.n)}</div><div><a class="nm" href="#d-${d.id}">${esc(d.n)}</a><span class="sm">${N(d.p)} · ${d.uf}</span></div><div class="pr">${pres}</div></li>`}
+function list(){const s=norm(q.value.trim());
+  const a=L.filter(d=>(!fu.value||d.uf===fu.value)&&(!fp.value||d.p===fp.value)&&(!s||norm(d.n).includes(s))).sort((x,y)=>x.n.localeCompare(y.n,'pt'));
+  document.getElementById('cnt').textContent=a.length===1?'1 deputado':a.length+' deputados';
+  document.getElementById('dl').innerHTML=a.length?a.slice(0,lim).map(row).join(''):'<li class="sm" style="padding:12px 0">Nenhum deputado encontrado com esse nome ou filtro.</li>';
+  document.getElementById('more').hidden=a.length<=lim}
+[q,fu,fp].forEach(e=>e.addEventListener('input',()=>{lim=30;list()}));
+document.getElementById('more').addEventListener('click',()=>{lim+=60;list()});
+list();
+
+
+// ===== plenário de 513 cadeiras (ordem de presença em 2025)
+{const svg=document.getElementById('plen');const R0=150,R1=470,rows=12,cx=500,cy=490;const pos=[];
+ const radii=Array.from({length:rows},(_,i)=>R0+(R1-R0)*i/(rows-1));const tot=radii.reduce((a,b)=>a+b,0);
+ let left=513;radii.forEach((r,i)=>{let n=i===rows-1?left:Math.round(513*r/tot);left-=n;for(let k=0;k<n;k++){const a=Math.PI*(1-(k+.5)/n);pos.push([cx+r*Math.cos(a),cy-r*Math.sin(a),a])}});
+ pos.sort((p,q)=>q[2]-p[2]);
+ const ord=[...L].sort((a,b)=>{const x=a.y[2].pct,y=b.y[2].pct;if(x==null&&y==null)return 0;if(x==null)return 1;if(y==null)return -1;return x-y});
+ svg.innerHTML=ord.map((d,i)=>{const [x,y]=pos[i];const c=d.y[2].pct==null?'#2a3f6b':d.y[2].op?'#12B5CB':'#DDA544';
+  return `<a href="#d-${d.id}"><circle class="seat" cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="10.5" fill="${c}"><title>${esc(d.n)} (${N(d.p)}-${d.uf}): ${d.y[2].pct==null?'sem dados em 2025':Math.round(d.y[2].pct)+'% de presença em 2025'}</title></circle></a>`}).join('')+
+  `<text x="500" y="470" text-anchor="middle" fill="#F4F1EA" font-family="Vidaloka,serif" font-size="56">513</text>`}
+// votações
+const dt=s=>s.split('-').reverse().join('/');
+document.getElementById('vl').innerHTML=VOT.map(v=>`<div class="vote"><div class="vt"><b>${esc(v[6])}</b></div><div></div><div class="vm">${dt(v[1])} · ${A(C+'/propostas-legislativas/'+v[3],v[2])} · Aprovado: ${fmt(v[4])} Sim, ${fmt(v[5])} Não</div></div>`).join('');
+
+// partidos
+let F='divididas';
+const pairs=[['PL','PT'],['NOVO','PT'],['MISSÃO','PT'],['PL','CENTRO'],['NOVO','CENTRO'],['MISSÃO','CENTRO']];
+const SRC='https://dadosabertos.camara.leg.br/swagger/api.html#staticfile';
+function parts(){document.getElementById('pl').innerHTML=pairs.map(([a,b])=>{const v=R[a][b][F],p=100*v[0]/v[1],on=Math.round(p);
+  return `<div class="pair"><span class="nm">${N(a)} e ${N(b)}</span><span class="val">${A(SRC,f1(Math.round(p*10)/10))}</span><div class="seats" aria-hidden="true">${Array.from({length:100},(_,k)=>`<i${k<on?' class="on"':''}></i>`).join('')}</div><span class="sm">Do mesmo lado em ${fmt(v[0])} de ${fmt(v[1])} votações${a==='MISSÃO'?' (desde 10/03/2026)':''}</span></div>`}).join('')}
+document.querySelectorAll('#pch .chip').forEach(b=>b.addEventListener('click',()=>{F=b.dataset.f;document.querySelectorAll('#pch .chip').forEach(c=>c.setAttribute('aria-pressed',c===b));parts()}));
+parts();
+{const FMX=fence(MX.M.flatMap((r,i)=>r.filter((v,j)=>i!==j&&v).map(v=>100*v[0]/v[1])));const P=MX.P;let h='<thead><tr><th>Partido</th>'+P.map(p=>`<th>${N(p)}</th>`).join('')+'</tr></thead><tbody>';
+P.forEach((a,i)=>{h+=`<tr><th>${N(a)}</th>`+P.map((b,j)=>{if(i===j)return '<td>–</td>';const v=MX.M[i][j],p=Math.round(100*v[0]/v[1]);const o=outOf(100*v[0]/v[1],FMX);const bg=o?'background:#12B5CB;color:#061531':`background:rgba(221,165,68,${(p/100*.85).toFixed(2)})`;return `<td style="${bg}" title="${v[0]} de ${v[1]} votações${o?' · fora do padrão':''}"><a href="${SRC}" target="_blank" rel="noopener">${p}%</a></td>`}).join('')+'</tr>'});
+document.getElementById('mx').innerHTML=h+'</tbody>'}
+
+
+const GR=[['L','Propostas de lei','Projetos que criam ou mudam leis, ou mudam a Constituição. Primeiro os que viraram lei.'],
+['M','Pedidos de melhoria para o país','Sugestões ao governo e pedidos de verba no Orçamento.'],
+['P','Perguntas e cobranças','Pedidos de informação, convocação de ministros, CPIs e fiscalização.'],
+['H','Homenagens','Parabéns, pesar, sessões solenes, datas comemorativas, nomes de obras, títulos.'],
+['O','Outros','Emendas, relatórios, pedidos sobre a pauta, audiências e organização interna.']];
+const ST={1:'Virou lei',2:'Aprovada na Câmara',3:'Pronta para votação',4:'Em análise',5:'Arquivada ou retirada'};
+let CACHE={};
+async function loadProps(id){if(CACHE[id])return CACHE[id];const r=await fetch('s/'+(id%64)+'.json');if(!r.ok)throw new Error('falha');const j=await r.json();CACHE={};CACHE[id]=j[id]||[];return CACHE[id]}
+function propItem(p){const [id,lab,dt,g,si,et,pr,em]=p;
+  return `<div class="pi"><div class="h">${A(C+'/propostas-legislativas/'+id,esc(lab))}<span>${dt.split('-').reverse().join('/')}</span><span>${pr?'Autor principal':'Coautor'}</span>${g==='L'?`<span class="st st${et}">${ST[et]}</span>`:''}</div><p>${esc(em)||'<span class="sm">Sem resumo oficial.</span>'}</p></div>`}
+function wireGroups(d){document.querySelectorAll('#pc .grp').forEach(det=>{let done=false;det.addEventListener('toggle',async()=>{if(!det.open||done)return;done=true;const box=det.querySelector('.gb');
+  try{const all=(await loadProps(d.id)).filter(p=>p[3]===det.dataset.g);
+    if(!all.length){box.innerHTML='<p class="sm">Nenhuma proposta neste grupo.</p>';return}
+    const keyOf=p=>p[3]==='L'?'e'+p[5]:'s'+p[4];const nameOf=k=>k[0]==='e'?ST[k.slice(1)]:SUBS[+k.slice(1)];
+    const cnt={};all.forEach(p=>{const k=keyOf(p);cnt[k]=(cnt[k]||0)+1});const keys=Object.keys(cnt).sort((a,b)=>a[0]==='e'?a.localeCompare(b):cnt[b]-cnt[a]);
+    let f='',lim=40;
+    const draw=()=>{const list=f?all.filter(p=>keyOf(p)===f):all;
+      box.innerHTML=(keys.length>1?`<div class="subs">${['',...keys].map(k=>`<button class="chip" data-k="${k}" aria-pressed="${k===f}">${k?nameOf(k)+' ('+fmt(cnt[k])+')':'Todas ('+fmt(all.length)+')'}</button>`).join('')}</div>`:'')+
+      list.slice(0,lim).map(propItem).join('')+(list.length>lim?`<button class="btn" data-more="1">Mostrar mais (${fmt(list.length-lim)} restantes)</button>`:'');
+      box.querySelectorAll('.chip').forEach(b=>b.onclick=()=>{f=b.dataset.k;lim=40;draw()});const mb=box.querySelector('[data-more]');if(mb)mb.onclick=()=>{lim+=80;draw()}};
+    draw()}catch(e){box.innerHTML='<p class="sm">Não foi possível carregar agora. Tente de novo em instantes.</p>';done=false}})})}
+
+// ===== busca por estado ou assunto
+const UFN={AC:'Acre',AL:'Alagoas',AP:'Amapá',AM:'Amazonas',BA:'Bahia',CE:'Ceará',DF:'Distrito Federal',ES:'Espírito Santo',GO:'Goiás',MA:'Maranhão',MT:'Mato Grosso',MS:'Mato Grosso do Sul',MG:'Minas Gerais',PA:'Pará',PB:'Paraíba',PR:'Paraná',PE:'Pernambuco',PI:'Piauí',RJ:'Rio de Janeiro',RN:'Rio Grande do Norte',RS:'Rio Grande do Sul',RO:'Rondônia',RR:'Roraima',SC:'Santa Catarina',SP:'São Paulo',SE:'Sergipe',TO:'Tocantins'};
+const UFBY=Object.fromEntries(Object.entries(UFN).map(([k,v])=>[norm(v),k]));
+const GL={L:'Proposta de lei',M:'Pedido de melhoria',P:'Pergunta ou cobrança',H:'Homenagem'};
+let CORP=null,NOMES=null;
+async function corpus(){if(CORP)return CORP;const fs=['b2026','b2025','b2024','b2023','nomes'];const js=await Promise.all(fs.map(f=>fetch('busca/'+f+'.json').then(r=>{if(!r.ok)throw 0;return r.json()})));NOMES=js.pop();CORP=js.flat();CORP.forEach(p=>p.t=norm(p[6]+' '+p[7]));return CORP}
+const nmA=id=>{const n=NOMES&&NOMES[id];return n?`${n[0]} (${n[1]}-${n[2]})`:'Deputado(a)'};
+function whoHTML(au){if(!au.length)return '';const first=nmA(au[0]);if(au.length===1)return `<div class="who">Por: ${esc(first)}</div>`;
+  return `<div class="who">Por: ${esc(first)} e mais ${au.length-1} <button type="button" data-all="${au.join(',')}">ver todos</button></div>`}
+document.addEventListener('click',e=>{const b=e.target.closest('[data-all]');if(!b)return;b.parentElement.innerHTML='Por: '+b.dataset.all.split(',').map(i=>esc(nmA(+i))).join(', ')});
+const ST2={1:'Virou lei',2:'Aprovada na Câmara',3:'Pronta para votação',4:'Em análise',5:'Arquivada ou retirada'};
+function sItem(p){const [id,lab,dt,g,si,et,em,kw,uf,au]=p;
+  return `<div class="pi"><div class="h">${A(C+'/propostas-legislativas/'+id,esc(lab))}<span>${dt.split('-').reverse().join('/')}</span><span class="gtag">${GL[g]}</span>${g==='L'?`<span class="st st${et}">${ST2[et]}</span>`:''}</div><p>${esc(em)}</p>${whoHTML(au)}</div>`}
+let SQ={res:[],g:'',lim:40,label:''};
+function drawS(){const box=document.getElementById('sres');const r=SQ.g?SQ.res.filter(p=>p[3]===SQ.g):SQ.res;
+  const c={};SQ.res.forEach(p=>c[p[3]]=(c[p[3]]||0)+1);
+  const aut=new Set();SQ.res.forEach(p=>p[9].forEach(a=>aut.add(a)));
+  box.innerHTML=`<p class="cnt"><b>${fmt(SQ.res.length)}</b> propostas sobre <b>${esc(SQ.label)}</b>, assinadas por ${fmt(aut.size)} deputados.</p>`+
+  (SQ.res.length?`<div class="subs">${['','L','M','P','H'].filter(k=>!k||c[k]).map(k=>`<button class="chip" data-sg="${k}" aria-pressed="${k===SQ.g}">${k?GL[k]+' ('+fmt(c[k])+')':'Todas'}</button>`).join('')}</div>`:'<p class="sm">Nada encontrado. Tente outra palavra, sem acento ou mais curta.</p>')+
+  r.slice(0,SQ.lim).map(sItem).join('')+(r.length>SQ.lim?`<button class="btn" id="smore">Mostrar mais (${fmt(r.length-SQ.lim)} restantes)</button>`:'');
+  box.querySelectorAll('[data-sg]').forEach(b=>b.onclick=()=>{SQ.g=b.dataset.sg;SQ.lim=40;drawS()});
+  const mb=document.getElementById('smore');if(mb)mb.onclick=()=>{SQ.lim+=80;drawS()}}
+async function runSearch(qs){qs=qs.trim();if(!qs)return;const box=document.getElementById('sres');box.innerHTML='<p class="cnt">Carregando os dados da Câmara…</p>';
+  try{await corpus()}catch(e){box.innerHTML='<p class="sm">Não foi possível carregar agora. Tente de novo em instantes.</p>';return}
+  const n=norm(qs);let uf=null;if(/^[a-z]{2}$/.test(n)&&UFN[n.toUpperCase()])uf=n.toUpperCase();else if(UFBY[n])uf=UFBY[n];
+  if(uf){SQ.res=CORP.filter(p=>p[8].split(',').includes(uf));SQ.label=UFN[uf]}
+  else{const ws=n.split(/\s+/).filter(Boolean);SQ.res=CORP.filter(p=>ws.every(w=>p.t.includes(w)));SQ.label=qs}
+  SQ.g='';SQ.lim=40;drawS()}
+document.getElementById('sform').addEventListener('submit',e=>{e.preventDefault();runSearch(document.getElementById('sq').value)});
+document.getElementById('sex').innerHTML=['Bahia','Amazonas','São Paulo','creche','autismo','BR-116','enchentes','segurança pública'].map(w=>`<button class="chip" type="button" data-ex="${w}">${w}</button>`).join('');
+document.getElementById('sex').addEventListener('click',e=>{const b=e.target.closest('[data-ex]');if(!b)return;document.getElementById('sq').value=b.dataset.ex;runSearch(b.dataset.ex)});
+
+// ===== repetidas
+const TIPO={PL:'Projeto de Lei',PLP:'Projeto de Lei Complementar',PEC:'Proposta de Emenda à Constituição',PDL:'Projeto de Decreto Legislativo',PRC:'Projeto de Resolução',INC:'Indicação (sugestão ao governo)',RIC:'Pedido de informação',REQ:'Requerimento',SOR:'Sugestão de verba no Orçamento',SLD:'Sugestão para a Lei de Diretrizes Orçamentárias',PFC:'Proposta de fiscalização',SIT:'Pedido de informação ao TCU'};
+let REP=null,RM=3,RL=30,FR=null;
+function rItem(g){const [t,em,n,uf,gg,its]=g;const d0=its[0][2].split('-').reverse().join('/'),d1=its[its.length-1][2].split('-').reverse().join('/');
+  const aut=new Set(its.map(x=>x[3]));
+  const o=FR&&outOf(n,FR);return `<details class="rg${o?' o':''}"><summary><span class="big">${n}<small>vezes</small></span><b>${TIPO[t]||t} ${o?FP:''}</b><span class="sm">${esc(em)}<br>${d0===d1?'Tudo em '+d0:'De '+d0+' a '+d1} · ${aut.size===1?'1 autor principal':aut.size+' autores principais diferentes'}</span></summary><div class="gb">`+
+  its.map(([id,lab,dt,a1,na,sit])=>`<div class="pi"><div class="h">${A(C+'/propostas-legislativas/'+id,esc(lab))}<span>${dt.split('-').reverse().join('/')}</span>${sit?`<span class="st">${esc(sit)}</span>`:''}</div><div class="who">Por: ${esc(nmA(a1))}${na>1?` e mais ${na-1}`:''}</div></div>`).join('')+'</div></details>'}
+async function drawR(){const box=document.getElementById('rl');if(!REP){box.innerHTML='<p class="cnt">Carregando…</p>';try{const [r,n]=await Promise.all([fetch('busca/repetidas.json').then(r=>r.json()),NOMES?Promise.resolve(NOMES):fetch('busca/nomes.json').then(r=>r.json())]);REP=r;NOMES=n;FR=fence(REP.filter(g=>g[2]>=3).map(g=>g[2]))}catch(e){box.innerHTML='<p class="sm">Não foi possível carregar agora.</p>';return}}
+  const q=norm(document.getElementById('rq').value.trim());let uf=null;if(/^[a-z]{2}$/.test(q)&&UFN[q.toUpperCase()])uf=q.toUpperCase();else if(UFBY[q])uf=UFBY[q];
+  const l=REP.filter(g=>g[2]>=RM&&(!q||(uf?g[3].split(',').includes(uf):norm(g[1]+' '+(TIPO[g[0]]||'')).includes(q))));
+  document.getElementById('rcnt').textContent=`${fmt(l.length)} pedidos repetidos, somando ${fmt(l.reduce((s,g)=>s+g[2],0))} propostas`;
+  box.innerHTML=l.slice(0,RL).map(rItem).join('');document.getElementById('rmore').hidden=l.length<=RL}
+document.getElementById('rmin').addEventListener('click',e=>{const b=e.target.closest('[data-m]');if(!b)return;RM=+b.dataset.m;RL=30;document.querySelectorAll('#rmin .chip').forEach(c=>c.setAttribute('aria-pressed',c===b));drawR()});
+document.getElementById('rq').addEventListener('input',()=>{RL=30;drawR()});
+document.getElementById('rmore').addEventListener('click',()=>{RL+=50;drawR()});
+{const io=new IntersectionObserver(es=>{if(es.some(e=>e.isIntersecting)){io.disconnect();drawR()}});io.observe(document.getElementById('repetidas'))}
+
+// página do deputado
+const lab={S:'Sim',N:'Não',O:'Obstrução',A:'Abstenção',P:'Presidia',['-']:'Não votou'};
+function depPage(d){
+  const ys=d.y,y25=ys[2];
+  const ostat=(cls,val,lab)=>`<div class="stat${cls?' o':''}"><b>${val}</b><span>${lab}${cls?'<br>'+FP:''}</span></div>`;
+  const vy=VYM.get(d.id)||[0,0,0,0,0];
+  const stats=`<div class="stats">${ostat(y25.op,y25.pct==null?'–':Math.round(y25.pct)+'%','presença no plenário em 2025')}${ostat(y25.ov,y25.vpct==null?'–':Math.round(y25.vpct)+'%','das votações de 2025 em que votou')}${ostat(d.og[0],fmt(d.rs[1]),'propostas de lei de 2023 a 2026')}</div>`;
+  const outs=[];ys.forEach(y=>{if(y.op)outs.push(`presença ${y.op} do comum em ${y.ano} (${Math.round(y.pct)}%)`);if(y.ov)outs.push(`votou em menos ou mais votações que o comum em ${y.ano} (${Math.round(y.vpct)}%)`)});
+  const nmK={fi:'com o próprio partido',pt:'com a maioria do PT',pl:'com a maioria do PL',gv:'com a orientação do Governo'};
+  for(const k in nmK)if(d.o[k])outs.push(`votou ${nmK[k]} ${d.o[k]==='abaixo'?'bem menos':'bem mais'} que os colegas do ${N(d.p)} (${f1(d[k])})`);
+  ['Propostas de lei','Pedidos de melhoria','Perguntas e cobranças','Homenagens','Outros'].forEach((g,i)=>{if(d.og[i])outs.push(`${g}: ${fmt(d.rs[i+1])}, ${d.og[i]} do comum entre os deputados`)});
+  const n21=d.ov21.filter(Boolean).length;if(n21)outs.push(`votou diferente da maioria do ${N(d.p)} em ${n21} das ${VOT.length} votações que dividiram o plenário`);
+  const presY=ys.map(y=>{const t=y.p+y.aj+y.an;if(!t)return `<div class="yr"><div class="ln"><b>${y.ano}</b><span class="sm">Não estava no mandato nos dias de sessão</span></div></div>`;
+    const dots='<i></i>'.repeat(y.p)+'<i class="j"></i>'.repeat(y.aj)+'<i class="n"></i>'.repeat(y.an);
+    return `<div class="yr"><div class="ln"><b>${y.ano}${y.ano===2026?' <span class="sm">(até agora)</span>':''} ${y.op?FP:''}</b><span>${A(presURL(d.id,y.ano),y.p)} presente · ${A(presURL(d.id,y.ano),y.aj)} justificada · ${A(presURL(d.id,y.ano),y.an)} sem justificativa</span></div><div class="dots" aria-hidden="true">${dots}</div></div>`}).join('');
+  const votRows=ys.map((y,k)=>`<tr><td>${y.ano}</td><td>${A(votURL(d.id,y.ano),fmt(vy[k+1]))} <span class="sm">de ${fmt(VY.tot[k])}</span>${y.ov?' '+FP:''}</td><td>${A(propURL(d.id,y.ano),fmt(y.prop))}</td></tr>`).join('');
+  const votes=VOT.map((v,i)=>{const c=d.cod[i]||'-';const o=d.ov21[i];return `<div class="vote${o?' o':''}"><div class="vt">${esc(v[6])}${o?`<br><span class="fp">diferente da maioria do ${N(d.p)}</span>`:''}</div><span class="tag t${c}">${lab[c]}</span><div class="vm">${dt(v[1])} · ${A(C+'/propostas-legislativas/'+v[3],v[2])} · ${A(votURL(d.id,v[1].slice(0,4)),'ver voto no site da Câmara')}</div></div>`}).join('');
+  const al=(k,t)=>{const v=d[k];if(v==null)return '';const o=d.o[k];return `<div class="ln"><span>${t} ${o?FP:''}</span>${A(SRC,f1(v))}</div><div class="bar${o?' o':''}"><i style="width:${v}%"></i></div>`};
+  return `<div class="dhero"><div class="w"><a class="back" href="#busca">← Todos os deputados</a>
+  <h1>${esc(d.n)}</h1><p class="lede">${N(d.p)} · ${d.uf} · ${A(C+'/deputados/'+d.id,'página oficial na Câmara')}</p>${stats}</div></div>
+  <div class="w">
+  ${outs.length?`<div class="fpnote"><b>O que sai do padrão neste deputado:</b><br>${outs.map(esc).join('<br>')}<br><a href="#padrao">Como definimos "fora do padrão"</a></div>`:`<div class="fpnote">Nenhum número deste deputado sai do padrão. <a href="#padrao">Como definimos</a></div>`}
+  <div class="card"><h2>Presença no plenário</h2><p class="why">Cada bolinha é um dia com sessão de votação. <span style="color:#B98533">●</span> presente · <span style="color:#cfc5ae">●</span> falta justificada · <span style="color:#C2564D">○</span> falta sem justificativa. Toque no número para ver a lista oficial de cada dia.</p>${presY}</div>
+  <div class="card"><h2>Votações e propostas</h2><p class="why">Em quantas votações nominais do plenário ele votou Sim, Não, Obstrução ou Abstenção, de quantas houve no ano. Ao lado, todas as propostas que apresentou (projetos, requerimentos, indicações e outros pedidos).</p>
+  <div class="scroll"><table><thead><tr><th>Ano</th><th>Votou</th><th>Propostas apresentadas</th></tr></thead><tbody>${votRows}</tbody></table></div>
+  <p style="margin-top:14px">Projetos de lei, de lei complementar, de emenda à Constituição e de decreto legislativo (2023 a 2026), como autor ou coautor: ${A(projURL(d.id),'<b>'+fmt(d.pj)+'</b>')}</p></div>
+  <div class="card" id="pc"><h2>Propostas separadas por grupo</h2><p class="why">${fmt(d.rs.slice(1,6).reduce((a,b)=>a+b,0))} propostas de 2023 a 2026 em que ele é autor ou coautor. Toque em um grupo para ler uma por uma. <a href="#regra">Como separamos</a></p>
+  ${GR.map(([k,t,ds],i)=>`<details class="grp" data-g="${k}"><summary><b>${t}</b><span class="n">${fmt(d.rs[1+i])}${d.og[i]?'<br>'+FP:''}</span><span class="d">${ds}</span></summary><div class="gb">Carregando…</div></details>`).join('')}</div>
+  <div class="card"><h2>Como votou nas ${VOT.length} votações que dividiram o plenário</h2><p class="why">Votações principais de projetos em 2025 e 2026 em que o lado que perdeu teve pelo menos 20% dos votos. Todas foram aprovadas. Em turquesa, quando ele votou diferente da maioria do partido atual dele.</p>${votes}</div>
+  <div class="card"><h2>Com quem votou do mesmo lado</h2><p class="why">De 2023 a 2026, em ${fmt(d.vn)} votações nominais do plenário. Em turquesa, quando o número sai do padrão entre os colegas do ${N(d.p)}.</p>
+  ${al('fi','Com o próprio partido')}${d.p!=='PT'?al('pt','Com a maioria do PT'):''}${d.p!=='PL'?al('pl','Com a maioria do PL'):''}${al('gv','Com a orientação do Governo')}
+  <p class="sm">Votos registrados: ${A(SRC,fmt(d.S))} Sim · ${A(SRC,fmt(d.No))} Não · ${A(SRC,fmt(d.O))} Obstrução · ${A(SRC,fmt(d.A))} outros</p></div>
+  <p style="margin-top:20px"><a class="back" href="#busca">← Todos os deputados</a></p></div>`}
+const home=document.getElementById('home'),dep=document.getElementById('dep');
+function route(){const m=location.hash.match(/^#d-(\d+)$/);const d=m&&L.find(x=>x.id==m[1]);
+  if(d){dep.innerHTML=depPage(d);wireGroups(d);home.hidden=true;dep.hidden=false;window.scrollTo(0,0);document.title=d.n+' · Placar da Câmara'}
+  else{dep.hidden=true;home.hidden=false;document.title='Placar da Câmara';if(location.hash&&!location.hash.startsWith('#d-')){const t=document.querySelector(location.hash);if(t)t.scrollIntoView()}}}
+window.addEventListener('hashchange',route);route();
+}
+</script>
+</body>
+</html>
