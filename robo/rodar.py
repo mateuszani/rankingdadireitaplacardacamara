@@ -19,6 +19,7 @@ import requests
 
 sys.path.insert(0, os.path.dirname(__file__))
 import baixar
+import custos
 from classificar import grupo, etapa
 
 RAIZ = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -94,22 +95,132 @@ def ler_pagina(html):
 
 
 def coletar_paginas(ids):
+    """Página oficial de cada deputado em cada ano: presença, propostas e custos do mandato."""
     tarefas = [(i, a) for i in ids for a in ANOS]
-    res = {}
+    res, cus = {}, {}
 
     def um(t):
         i, a = t
         h = baixar.pagina(f"https://www.camara.leg.br/deputados/{i}?ano={a}")
-        return t, (ler_pagina(h) if h else None)
+        if not h:
+            return t, None, None
+        r = ler_pagina(h)
+        return t, r, (custos.ler_custos(texto_html(h), a) if r else None)
 
     with cf.ThreadPoolExecutor(6) as ex:
-        for t, r in ex.map(um, tarefas):
-            res[t] = r
+        for t, r, c in ex.map(um, tarefas):
+            res[t], cus[t] = r, c
     falhas = [t for t, r in res.items() if r is None]
     for t in falhas:  # segunda chance, devagar
         time.sleep(1)
-        res[t] = um(t)[1]
+        _, res[t], cus[t] = um(t)
+    return res, cus
+
+
+def coletar_emendas(ids):
+    """Lista oficial de emendas ao Orçamento de cada deputado, ano a ano, com todas as páginas."""
+    res = {}
+
+    def pag(i, a, n):
+        h = baixar.pagina(f"https://www.camara.leg.br/deputados/{i}/todas-emendas?ano={a}&pagina={n}", minimo=15000)
+        return custos.ler_emendas(h) if h else None
+
+    def um(t):
+        i, a = t
+        for _ in range(3):
+            r = pag(i, a, 1)
+            if r is not None:
+                break
+            time.sleep(2)
+        if r is None:
+            return t, None
+        total, itens = r
+        for n in range(2, custos.paginas_necessarias(total) + 1):
+            rn = None
+            for _ in range(3):
+                rn = pag(i, a, n)
+                if rn is not None:
+                    break
+                time.sleep(2)
+            if rn is None:
+                return t, None
+            itens += rn[1]
+        return t, (total, itens)
+
+    with cf.ThreadPoolExecutor(6) as ex:
+        for t, r in ex.map(um, [(i, a) for i in ids for a in ANOS]):
+            res[t] = r
     return res
+
+
+def coletar_gasto_camara():
+    h = baixar.pagina("https://www.camara.leg.br/transparencia/", minimo=15000)
+    return custos.ler_gasto_camara(texto_html(h)) if h else None
+
+
+def calcular_custos_emendas(deps, CUS, EM, OFF, DEPS, RES, saida):
+    """Custo do mandato, emendas pagas por setor e a nota de cada deputado."""
+    SET = custos.NOMES_SETORES
+    si = {s: k for k, s in enumerate(SET)}
+    CU, EMD, shards = [], [], collections.defaultdict(dict)
+    setor_tot = [0.0] * len(SET)
+    for d in deps:
+        i = d["id"]
+        anos = [CUS.get((i, a)) or [0, 0, 0, 0] for a in ANOS]
+        tot = round(sum(x[0] + x[1] + x[2] for x in anos), 2)
+        CU.append([i, tot] + sum([list(x) for x in anos], []))
+        aut = emp = pago = 0.0; por = [0.0] * len(SET); itens = []
+        for a in ANOS:
+            r = EM.get((i, a))
+            for org, desc, au, em, pg in (r[1] if r else []):
+                s = si[custos.setor(org, desc)]
+                aut += au; emp += em; pago += pg; por[s] += pg; setor_tot[s] += pg
+                itens.append([a, org, desc, au, em, pg, s])
+        EMD.append([i, round(aut, 2), round(emp, 2), round(pago, 2), len(itens), [round(x, 2) for x in por]])
+        itens.sort(key=lambda x: (-x[0], -x[5]))
+        shards[i % 64][i] = itens
+    os.makedirs(os.path.join(saida, "e"), exist_ok=True)
+    for k in range(64):
+        json.dump(shards.get(k, {}), open(os.path.join(saida, "e", f"{k}.json"), "w"), ensure_ascii=False, separators=(",", ":"))
+
+    # ---- nota: 4 critérios, mesma regra para todos (ver texto "Como a nota é calculada" no site)
+    dep_by = {r[0]: r for r in DEPS}
+    res_by = {r[0]: r for r in RES["idx"]}
+    cu_by = {r[0]: r for r in CU}
+    vals = {"pres": {}, "vot": {}, "leis": {}, "custo": {}}
+    for d in deps:
+        i = d["id"]
+        p = [OFF.get((i, a)) for a in ANOS]
+        pres = sum(x[2] for x in p if x); dias = sum(x[2] + x[3] + x[4] for x in p if x)
+        if dias >= 20:
+            vals["pres"][i] = 100 * pres / dias
+        r = dep_by.get(i)
+        if r and r[5] >= 50:
+            vals["vot"][i] = 100 * r[4] / r[5]
+        vals["leis"][i] = res_by.get(i, [0] * 9)[8]
+        c = cu_by[i]; meses = sum(c[2 + 4 * k + 3] for k in range(len(ANOS)))
+        gasto = sum(c[2 + 4 * k] + c[2 + 4 * k + 1] for k in range(len(ANOS)))
+        if meses >= 3:
+            vals["custo"][i] = gasto / meses
+
+    def escala(v, todos, maior_melhor=True):
+        menos = sum(1 for x in todos if x < v); iguais = sum(1 for x in todos if x == v)
+        q = (menos + 0.5 * (iguais - 1)) / max(1, len(todos) - 1)
+        return round(10 * (q if maior_melhor else 1 - q), 1)
+
+    todos = {k: sorted(v.values()) for k, v in vals.items()}
+    NOTA = []
+    for d in deps:
+        i = d["id"]; sc = []; raw = []
+        for k, mm in [("pres", True), ("vot", True), ("leis", True), ("custo", False)]:
+            v = vals[k].get(i)
+            raw.append(None if v is None else round(v, 2))
+            sc.append(None if v is None else escala(v, todos[k], mm))
+        ok = [x for x in sc if x is not None]
+        NOTA.append([i, round(sum(ok) / len(ok), 1) if ok else None] + sc + raw)
+    stats = {"custo_total": round(sum(r[1] for r in CU), 2), "emendas_pago": round(sum(r[3] for r in EMD), 2),
+             "dep_com_custo": sum(1 for r in CU if r[1] > 0), "setores": [round(x, 2) for x in setor_tot]}
+    return CU, EMD, NOTA, SET, stats
 
 
 # ---------------------------------------------------------------- cálculos de votações
@@ -355,11 +466,12 @@ def calcular_propostas(dd, deps, saida):
         items = [[int(r.id), r.lab, r.dt, r.g, int(r.si), int(r.et), int(bool(pr.get(r.id))), r.em] for r in pp.itertuples()]
         shards[int(dep) % 64][int(dep)] = items
         vc = pp.g.value_counts()
-        idx.append([int(dep)] + [int(vc.get(k, 0)) for k in "LMPHO"] + [int((pp.et == 1).sum()), sum(pr.values())])
+        aprov = int(sum(1 for r in pp.itertuples() if r.g == "L" and r.et in (1, 2) and pr.get(r.id)))
+        idx.append([int(dep)] + [int(vc.get(k, 0)) for k in "LMPHO"] + [int((pp.et == 1).sum()), sum(pr.values()), aprov])
         pj[int(dep)] = int(pp.siglaTipo.isin(["PL", "PLP", "PEC", "PDL"]).sum())
     for d in deps:
         if str(d["id"]) not in set(Ad.idDeputadoAutor):
-            idx.append([d["id"], 0, 0, 0, 0, 0, 0, 0]); shards[d["id"] % 64][d["id"]] = []
+            idx.append([d["id"], 0, 0, 0, 0, 0, 0, 0, 0]); shards[d["id"] % 64][d["id"]] = []
     os.makedirs(os.path.join(saida, "s"), exist_ok=True)
     for k in range(64):
         json.dump(shards.get(k, {}), open(os.path.join(saida, "s", f"{k}.json"), "w"), ensure_ascii=False, separators=(",", ":"))
@@ -401,9 +513,26 @@ def calcular_propostas(dd, deps, saida):
 
 
 # ---------------------------------------------------------------- conferência
-def conferir(atual, anterior, OFF, deps, stats_v, stats_p):
+def conferir(atual, anterior, OFF, deps, stats_v, stats_p, CUS=None, EM=None, CAM=None, stats_c=None):
     """Devolve a lista de problemas. Lista vazia = pode publicar."""
     prob = []
+    if EM is not None:
+        falt = [k for k, v in EM.items() if v is None]
+        if falt:
+            prob.append(f"{len(falt)} listas de emendas não foram lidas (ex.: {falt[:3]})")
+        incomp = [k for k, v in EM.items() if v is not None and len(v[1]) != v[0]]
+        if incomp:
+            prob.append(f"{len(incomp)} listas de emendas vieram incompletas (ex.: {incomp[:3]})")
+    if CUS is not None:
+        falt = [k for k, v in CUS.items() if v is None]
+        if falt:
+            prob.append(f"custos não lidos em {len(falt)} páginas (ex.: {falt[:3]})")
+    if stats_c is not None and stats_c["dep_com_custo"] < 480:
+        prob.append(f"só {stats_c['dep_com_custo']} deputados com custo do mandato (esperado perto de 513)")
+    if CAM is None:
+        prob.append("não foi possível ler o gasto da Câmara na página de transparência")
+    elif CAM["ano"] != int(atual["data"][-4:]) and not atual["data"].startswith(("01/01", "02/01", "03/01", "04/01", "05/01")):
+        prob.append(f"a página de transparência mostra o gasto de {CAM['ano']}, não do ano atual")
     nd = len(deps)
     if not 505 <= nd <= 520:
         prob.append(f"lista de deputados em exercício com {nd} nomes (esperado perto de 513)")
@@ -448,7 +577,8 @@ def conferir(atual, anterior, OFF, deps, stats_v, stats_p):
 # ---------------------------------------------------------------- principal
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--local"); ap.add_argument("--off"); ap.add_argument("--deps")
+    ap.add_argument("--local"); ap.add_argument("--coleta"); ap.add_argument("--deps")
+    ap.add_argument("--salvar-coleta", dest="salvar_coleta"); ap.add_argument("--salvar-rep", dest="salvar_rep")
     ap.add_argument("--saida", default=os.path.join(RAIZ, "saida"))
     ap.add_argument("--dados", default=os.path.join(RAIZ, "dados"))
     a = ap.parse_args()
@@ -467,11 +597,23 @@ def main():
         log("2/6 arquivos oficiais (votações e proposições)")
         meta = coletar_arquivos(a.dados, a.local)
         log("3/6 página oficial de cada deputado (presença e propostas)")
-        if a.off:
-            OFF = {(r[0], y): r[1 + k * 5: 6 + k * 5] for r in json.load(open(a.off)) for k, y in enumerate(ANOS)}
+        if a.coleta:
+            C = json.load(open(a.coleta))
+            K = lambda s: tuple(int(x) for x in s.split("-"))
+            OFF = {K(k): v for k, v in C["OFF"].items()}; CUS = {K(k): v for k, v in C["CUS"].items()}
+            EM = {K(k): v for k, v in C["EM"].items()}; CAM = C["CAM"]
         else:
-            OFF = coletar_paginas([d["id"] for d in deps])
+            OFF, CUS = coletar_paginas([d["id"] for d in deps])
         log(f"  {sum(v is not None for v in OFF.values())} de {len(OFF)} páginas lidas")
+        if not a.coleta:
+            log("   emendas ao Orçamento de cada deputado")
+            EM = coletar_emendas([d["id"] for d in deps])
+            log(f"  {sum(v is not None for v in EM.values())} de {len(EM)} listas de emendas lidas, {sum(len(v[1]) for v in EM.values() if v):,} emendas")
+            CAM = coletar_gasto_camara()
+            log(f"  gasto da Câmara: {CAM}")
+        if a.salvar_coleta:
+            S = lambda d: {f"{k[0]}-{k[1]}": v for k, v in d.items()}
+            json.dump({"OFF": S(OFF), "CUS": S(CUS), "EM": S(EM), "CAM": CAM}, open(a.salvar_coleta, "w"), ensure_ascii=False)
         log("4/6 votações")
         titulos = json.load(open(os.path.join(RAIZ, "robo", "titulos_votacoes.json")))
         R, MX, DEPS, VY, VOT, COD, sv = calcular_votacoes(a.dados, deps, titulos)
@@ -479,10 +621,13 @@ def main():
         log("5/6 propostas")
         RES, PP, sp = calcular_propostas(a.dados, deps, saida)
         log(f"  {sp['propostas']:,} propostas, {sp['assinaturas']:,} assinaturas dos deputados atuais")
+        CU, EMD, NOTA, SET, sc = calcular_custos_emendas(deps, CUS, EM, OFF, DEPS, RES, saida)
+        log(f"  custo dos mandatos: R$ {sc['custo_total']:,.2f}; emendas pagas: R$ {sc['emendas_pago']:,.2f}")
         atual = {"data": hoje.strftime("%d/%m/%Y"), "arquivos": meta,
                  "contagens": {"votacoes": sv["votacoes"], "votos": sv["votos"], "propostas": sp["propostas"],
                                "assinaturas": sp["assinaturas_todas"], **{f"votacoes_{y}": sv["plen_por_ano"][str(y)] for y in ANOS},
-                               "paginas_lidas": sum(v is not None for v in OFF.values())}}
+                               "paginas_lidas": sum(v is not None for v in OFF.values()),
+                               "custo_mandatos": sc["custo_total"], "emendas_pagas": sc["emendas_pago"]}}
         anterior = None
         try:
             r = requests.get(SITE_URL + "manifest.json", timeout=30)
@@ -492,7 +637,7 @@ def main():
         except Exception:
             log("  sem versão anterior publicada para comparar")
         log("6/6 conferência")
-        prob = conferir(atual, anterior, OFF, deps, sv, sp)
+        prob = conferir(atual, anterior, OFF, deps, sv, sp, CUS, EM, CAM, sc)
         rel["problemas"] = prob
         rel["contagens"] = atual["contagens"]
         if prob:
@@ -507,7 +652,10 @@ def main():
                "__VOT__": J(VOT), "__RANK__": J(R), "__MATRIX__": J(MX), "__DATA__": atual["data"],
                "__NPROP__": f"{sp['propostas']:,}".replace(",", "."), "__NASS__": f"{sp['assinaturas']:,}".replace(",", "."),
                "__NVOT__": f"{sv['votacoes']:,}".replace(",", "."), "__ULTIMA__": "/".join(R["meta"]["ultimaVotacao"][:10].split("-")[::-1]),
-               "__N21__": str(len(VOT))}
+               "__N21__": str(len(VOT)), "__CUS__": J(CU), "__EMD__": J(EMD), "__NOTA__": J(NOTA), "__SET__": J(SET),
+               "__SETT__": J(sc["setores"]), "__CAM__": J(CAM)}
+        if a.salvar_rep:
+            json.dump(rep, open(a.salvar_rep, "w"), ensure_ascii=False)
         for k, v in rep.items():
             if k not in t:
                 raise RuntimeError(f"marcador {k} não está no modelo")

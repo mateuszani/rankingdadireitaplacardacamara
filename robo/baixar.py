@@ -69,11 +69,11 @@ def api(caminho, tentativas=6):
     raise ColetaIncompleta(f"API não respondeu: {url}")
 
 
-def pagina(url, tentativas=5):
+def pagina(url, tentativas=5, minimo=20000):
     for k in range(tentativas):
         try:
             r = S.get(url, timeout=60)
-            if r.status_code == 200 and len(r.text) > 20000:
+            if r.status_code == 200 and len(r.text) > minimo:
                 return r.text
         except requests.RequestException:
             pass
