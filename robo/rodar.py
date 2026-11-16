@@ -127,7 +127,7 @@ def coletar_emendas(ids):
             r = baixar.S.get(url, timeout=60)
         except Exception:
             return None
-        if r.status_code == 404 and n == 1 and "não encontrada" in r.text:
+        if r.status_code == 404 and n == 1:
             return -1, []  # a Câmara não tem página de emendas para este deputado
         if r.status_code != 200 or len(r.text) < 15000:
             return None
