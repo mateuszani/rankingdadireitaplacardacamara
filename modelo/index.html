@@ -272,6 +272,66 @@ dd{margin:4px 0 0;font-size:15.5px}
 .keyd i{width:10px;height:10px;border-radius:50%;background:var(--gold)}
 .keyd i.j{background:#cfc5ae}.keyd i.n{background:transparent;box-shadow:inset 0 0 0 2px var(--red)}
 
+/* custódromo */
+.gauge{position:relative;max-width:520px;margin:10px auto 0}
+.gauge svg{display:block;width:100%;height:auto}
+.gauge .read{text-align:center;margin-top:6px}
+.live{display:block;font:800 clamp(30px,8.5vw,54px)/1 var(--f);font-stretch:75%;font-variant-numeric:tabular-nums;color:var(--gold);letter-spacing:-.01em}
+.live small{font-size:.5em;color:var(--gold2);margin-right:4px}
+.read span{display:block;font-size:13.5px;color:#a9b5cf;margin-top:6px;font-weight:600}
+.speed{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-top:18px}
+.speed div{background:rgba(255,255,255,.06);border-radius:16px;padding:12px 8px;text-align:center}
+.speed b{display:block;font:800 clamp(20px,5.5vw,30px)/1 var(--f);font-stretch:75%;color:var(--paper);font-variant-numeric:tabular-nums}
+.speed span{display:block;font-size:12.5px;color:#a9b5cf;margin-top:5px;line-height:1.3}
+/* barras de setor */
+.hb{display:grid;gap:10px;margin-top:12px}
+.hb .r{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:2px 10px;align-items:baseline}
+.hb .r b{font-size:15px;font-weight:600}
+.hb .r span{font:800 16px var(--f);font-stretch:80%;font-variant-numeric:tabular-nums;white-space:nowrap}
+.hb .r i{grid-column:1/-1;display:block;height:14px;border-radius:999px;background:var(--gold);min-width:3px}
+.hb .r i.tr{background:repeating-linear-gradient(135deg,var(--gold) 0 6px,#e9c27a 6px 12px)}
+.hb .r em{grid-column:1/-1;font-style:normal;font-size:12.5px;color:var(--mut)}
+/* comparativo */
+.cmpf{display:grid;grid-template-columns:minmax(0,1fr);gap:10px;margin:14px 0}
+@media(min-width:680px){.cmpf{grid-template-columns:minmax(0,1fr) minmax(0,1fr) auto}}
+.vs2{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:10px;margin-top:6px}
+.side{background:var(--navy);color:var(--paper);border-radius:var(--r2);padding:16px 14px;text-align:center;position:relative}
+.side.win{box-shadow:0 0 0 3px var(--gold)}
+.side .crown{position:absolute;top:-12px;left:50%;transform:translateX(-50%);background:var(--gold);color:var(--navy);font:800 12.5px var(--f);padding:3px 10px;border-radius:999px;white-space:nowrap}
+.side .av{margin:4px auto 8px}
+.side a{color:var(--paper);text-decoration:none;font-weight:800;font-size:17px;line-height:1.2;display:block}
+.side .sm{color:#a9b5cf}
+.side .nt{font:800 46px/1 var(--f);font-stretch:75%;color:var(--gold);margin-top:8px}
+.side .nt small{font-size:14px;color:#a9b5cf;font-weight:600}
+.crit{background:var(--paper);border-radius:var(--r2);padding:14px 16px;margin-top:10px}
+.crit h3{font-size:17px;margin:0 0 8px;font-stretch:90%}
+.crit .two{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:12px}
+.crit .two div{font:800 22px/1.1 var(--f);font-stretch:80%;font-variant-numeric:tabular-nums}
+.crit .two div.w{color:var(--gold3)}
+.crit .two div.w::after{content:" ✓";font-size:.8em}
+.crit .two small{display:block;font:500 12.5px var(--f);color:var(--mut);margin-top:2px}
+.crit p{margin:8px 0 0;font-size:14.5px;color:var(--mut)}
+.verdict{background:var(--goldbg);border-radius:var(--r2);padding:16px 18px;margin-top:12px;font-size:16.5px}
+.verdict b{font-size:18px}
+/* nota */
+.notab{display:inline-grid;place-items:center;min-width:46px;height:46px;padding:0 6px;border-radius:14px;background:var(--navy);color:var(--gold);font:800 22px/1 var(--f);font-stretch:75%;font-variant-numeric:tabular-nums}
+.money{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:8px;margin-top:18px}
+.money div{background:var(--gold);color:var(--navy);border-radius:18px;padding:14px 12px}
+.money div+div{background:var(--paper)}
+.money b{display:block;font:800 clamp(24px,6.5vw,38px)/1 var(--f);font-stretch:75%;font-variant-numeric:tabular-nums}
+.money span{display:block;font-size:13px;font-weight:600;margin-top:6px;line-height:1.3}
+.money a{color:inherit}
+.crow{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:4px 12px;padding:10px 0;border-bottom:1px solid var(--line)}
+.crow:last-child{border-bottom:0}
+.crow b{font:800 20px var(--f);font-stretch:80%;text-align:right;font-variant-numeric:tabular-nums}
+.crow .bar{grid-column:1/-1;margin:2px 0 0}
+.crow .sm{grid-column:1/-1}
+.em{padding:12px 0;border-bottom:1px solid var(--line)}
+.em:last-child{border-bottom:0}
+.em .h{display:flex;flex-wrap:wrap;gap:6px 10px;font-size:13.5px;color:var(--mut);align-items:center}
+.em p{margin:4px 0 0;font-size:15.5px;line-height:1.4}
+.em .v{display:flex;flex-wrap:wrap;gap:4px 14px;font-size:13.5px;margin-top:6px;color:var(--mut)}
+.em .v b{color:var(--ink);font-size:15px}
 footer{background:var(--navy);color:#b8c3dc;padding:34px 0 40px;font-size:14.5px}
 footer b{color:var(--gold)}
 [hidden]{display:none!important}
@@ -281,14 +341,14 @@ footer b{color:var(--gold)}
 </head>
 <body>
 <header class="top"><div class="w"><a class="brand" href="#"><svg width="34" height="20" viewBox="0 0 34 20" aria-hidden="true"><g fill="#DDA544"><circle cx="4" cy="16" r="3"/><circle cx="8" cy="8" r="3"/><circle cx="17" cy="4" r="3"/><circle cx="26" cy="8" r="3"/><circle cx="30" cy="16" r="3"/></g><circle cx="17" cy="13" r="3" fill="#12B5CB"/></svg><span><b>Placar da Câmara</b><small>Ranking da Direita</small></span></a>
-<nav class="nav" aria-label="Seções"><a href="#busca">Deputados</a><a href="#buscar">Buscar</a><a href="#repetidas">Repetidas</a><a href="#votacoes">Votações</a><a href="#partidos">Partidos</a></nav></div></header>
+<nav class="nav" aria-label="Seções"><a href="#busca">Deputados</a><a href="#comparar">Comparar</a><a href="#custodromo">Custódromo</a><a href="#emendas">Emendas</a><a href="#buscar">Buscar</a><a href="#partidos">Partidos</a></nav></div></header>
 
 <nav class="tabs" aria-label="Seções">
 <a href="#busca"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c1-4.5 4.5-6.5 8-6.5s7 2 8 6.5"/></svg>Deputados</a>
+<a href="#comparar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v16M5 8l-3 6h6zM19 8l-3 6h6zM5 8h14"/></svg>Comparar</a>
+<a href="#custodromo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3.5 17a9 9 0 1117 0"/><path d="M12 17l4-6"/></svg>Custódromo</a>
+<a href="#emendas"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h10M4 12h16M4 18h7"/></svg>Emendas</a>
 <a href="#buscar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5L21 21"/></svg>Buscar</a>
-<a href="#repetidas"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 11V9a3 3 0 013-3h12l-3-3M20 13v2a3 3 0 01-3 3H5l3 3"/></svg>Repetidas</a>
-<a href="#votacoes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="4"/><path d="M8.5 12.5l2.5 2.5 4.5-5"/></svg>Votações</a>
-<a href="#partidos"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 20V11M12 20V5M19 20v-6"/></svg>Partidos</a>
 </nav>
 
 <main id="home">
@@ -306,6 +366,14 @@ footer b{color:var(--gold)}
 </div>
 </div></div>
 
+<section class="sheet dark" id="custodromo" style="background:var(--navy2)"><div class="w">
+<div class="sec-h"><span class="ic" aria-hidden="true"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M3.5 17a9 9 0 1117 0"/><path d="M12 17l4-6"/></svg></span><h2>Custódromo da Câmara</h2></div>
+<p class="intro">Quanto a Câmara dos Deputados já gastou neste ano com dinheiro dos impostos: salários, servidores, gabinetes, prédios, contratos e todo o resto. O ponteiro mostra quanto do orçamento do ano já foi usado.</p>
+<div class="gauge" id="gauge"></div>
+<div class="speed" id="speed"></div>
+<p class="sm" style="margin-top:14px" id="camnota"></p>
+</div></section>
+
 <section class="sheet" id="busca"><div class="w">
 <div class="sec-h"><span class="ic" aria-hidden="true"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c1-4.5 4.5-6.5 8-6.5s7 2 8 6.5"/></svg></span><h2>Encontre um deputado</h2></div>
 <div class="f">
@@ -313,9 +381,25 @@ footer b{color:var(--gold)}
 <select id="fu" aria-label="Estado"><option value="">Todos os estados</option></select>
 <select id="fp" aria-label="Partido"><option value="">Todos os partidos</option></select>
 </div>
+<div class="chips" id="ord" role="group" aria-label="Ordem da lista"><button class="chip" data-o="nome" aria-pressed="true">A a Z</button><button class="chip" data-o="nota" aria-pressed="false">Maior nota</button><button class="chip" data-o="custo" aria-pressed="false">Mais caros</button><button class="chip" data-o="barato" aria-pressed="false">Mais baratos</button><button class="chip" data-o="emendas" aria-pressed="false">Mais emendas pagas</button></div>
 <p class="cnt" id="cnt"></p>
 <ul class="list" id="dl"></ul>
 <button class="btn" id="more">Mostrar mais deputados</button>
+</div></section>
+
+<section class="sheet white" id="comparar"><div class="w">
+<div class="sec-h"><span class="ic" aria-hidden="true"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v16M5 8l-3 6h6zM19 8l-3 6h6zM5 8h14"/></svg></span><h2>Compare dois deputados</h2></div>
+<p class="intro">Escolha dois nomes. O site coloca os números lado a lado e diz quem tem a melhor performance pela <a href="#nota">regra da nota</a>, e por quê.</p>
+<form class="cmpf" id="cform"><input id="ca" list="dnames" placeholder="Primeiro deputado" aria-label="Primeiro deputado" autocomplete="off"><input id="cb" list="dnames" placeholder="Segundo deputado" aria-label="Segundo deputado" autocomplete="off"><button class="sbtn" type="submit">Comparar</button></form>
+<datalist id="dnames"></datalist>
+<div id="cres"></div>
+</div></section>
+
+<section class="sheet" id="emendas"><div class="w">
+<div class="sec-h"><span class="ic" aria-hidden="true"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M4 6h10M4 12h16M4 18h7"/></svg></span><h2>Para onde foram as emendas pagas</h2></div>
+<p class="intro">Emendas são verbas do Orçamento que cada deputado indica para estados, municípios e entidades. Aqui entra só o dinheiro que <b>já foi pago</b>, não o que foi apenas reservado (empenhado). Soma das emendas dos deputados atuais, Orçamentos de 2023 a 2026.</p>
+<div class="card" style="margin-top:14px"><p class="cnt" id="settot" style="margin-top:0"></p><div class="hb" id="setbars"></div></div>
+<details><summary>Como cada emenda foi colocada num setor</summary><p class="sm">A Câmara mostra, para cada emenda, o órgão que recebe o dinheiro (por exemplo, Fundo Nacional de Saúde) e a ação (por exemplo, atenção primária à saúde). Uma regra única lê esses dois textos e escolhe o setor: saúde, educação, segurança e assim por diante. As <b>transferências especiais</b> (as chamadas "emendas Pix") vão direto para o caixa do município ou do estado, que decide onde usar; por isso aparecem num grupo separado, listrado. O que não se encaixa em nenhum setor fica em "Outros". Fonte: página "Emendas orçamentárias aprovadas" de cada deputado no site da Câmara, valores autorizado, empenhado e pago.</p></details>
 </div></section>
 
 <section class="sheet white" id="buscar"><div class="w">
@@ -385,6 +469,22 @@ footer b{color:var(--gold)}
 </dl>
 </div></section>
 
+<section class="sheet white" id="nota"><div class="w">
+<div class="sec-h"><span class="ic" aria-hidden="true"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l2.6 5.6 6 .7-4.5 4.1 1.2 6L12 16.4 6.7 19.4l1.2-6L3.4 9.3l6-.7z"/></svg></span><h2>Como a nota é calculada</h2></div>
+<p class="intro">A nota vai de 0 a 10 e usa a mesma regra para todos os 513 deputados. Ela junta quatro números oficiais. Em cada um, o deputado ganha uma nota de 0 a 10 conforme a posição dele entre todos: 10 é o melhor de todos, 0 o pior, 5 fica no meio. A nota final é a média das quatro.</p>
+<ul class="rule groups">
+<li data-i="1"><span><b>Presença no plenário.</b> Dias presentes em sessões de votação, de 2023 a 2026, sobre o total de dias de sessão em que ele estava no mandato. Mais é melhor.</span></li>
+<li data-i="2"><span><b>Participação nas votações.</b> Em quantas votações nominais do plenário ele votou, sobre quantas houve enquanto estava no mandato. Mais é melhor.</span></li>
+<li data-i="3"><span><b>Leis que avançaram.</b> Projetos de lei, de lei complementar, de emenda à Constituição ou de decreto legislativo em que ele é o autor principal e que viraram lei ou já foram aprovados na Câmara. Mais é melhor.</span></li>
+<li data-i="4"><span><b>Custo por mês.</b> Cota parlamentar mais verba de gabinete gastas, dividido pelos meses de mandato. Menos é melhor.</span></li>
+</ul>
+<p>Quem esteve pouco tempo no mandato (menos de 20 dias de sessão, menos de 50 votações ou menos de 3 meses com gastos) fica sem nota naquele critério, e a média usa só os outros.</p>
+<div class="warn"><p style="margin:0"><b>A nota é uma conta, não um juízo sobre a pessoa.</b> Ela mede só o que dá para medir com dados oficiais. Não mede a qualidade dos projetos, as posições políticas, o trabalho nas comissões nem o atendimento ao eleitor. Use junto com o resto da página.</p></div>
+<h3 style="margin-top:22px">O custo do mandato</h3>
+<p><b>Salário:</b> o subsídio mensal fixado no Decreto Legislativo 172/2022 (R$ 39.293,32 até março de 2023; R$ 41.650,92 de abril de 2023; R$ 44.008,52 de fevereiro de 2024; R$ 46.366,19 de fevereiro de 2025), contado nos meses em que o deputado teve gasto registrado. <b>Cota parlamentar</b> (passagens, combustível, escritório, divulgação) e <b>verba de gabinete</b> (salários dos assessores): valores gastos que a Câmara publica na página de cada deputado, ano por ano. Ficam de fora, porque a Câmara não publica o valor por deputado: imóvel funcional, auxílio-moradia, plano de saúde, previdência, 13º e a ajuda de custo do começo e do fim do mandato. Por isso o custo real é maior do que o mostrado.</p>
+<p><b>Custódromo:</b> o valor oficial "Despesas pagas" do ano, da página de transparência da Câmara, lido pelo robô todo dia. Entre uma leitura e outra, o contador avança no ritmo médio de gasto do ano, por isso o número que corre na tela é uma estimativa. O ponteiro mostra a parte do orçamento previsto para o ano que já foi paga.</p>
+</div></section>
+
 <section class="sheet" id="padrao"><div class="w">
 <div class="sec-h"><span class="ic" aria-hidden="true" style="background:var(--fp);color:var(--navy)"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="3.5" fill="currentColor"/><circle cx="12" cy="12" r="8"/></svg></span><h2>O que é "fora do padrão"</h2></div>
 <p class="intro">A cor <span class="fp">turquesa</span> aparece quando um número fica muito longe do que é comum. A regra é a mesma para tudo no site e não é opinião: é uma conta estatística usada no mundo todo (a regra de Tukey).</p>
@@ -423,13 +523,17 @@ footer b{color:var(--gold)}
 
 <main id="dep" hidden></main>
 
-<footer><div class="w"><p><b>Placar da Câmara, do Ranking da Direita.</b> Dados públicos da Câmara dos Deputados (camara.leg.br e dadosabertos.camara.leg.br), atualizados em __DATA__ por um robô que confere os dados antes de publicar. Este site não dá nota nem opinião: só mostra os números.</p></div></footer>
+<footer><div class="w"><p><b>Placar da Câmara, do Ranking da Direita.</b> Dados públicos da Câmara dos Deputados (camara.leg.br e dadosabertos.camara.leg.br), atualizados em __DATA__ por um robô que confere os dados antes de publicar. A nota segue uma regra pública e igual para todos; o site não dá opinião, só mostra os números e a conta.</p></div></footer>
 
 <script>
 {
 const CUS=__CUS__;const EMD=__EMD__;const NOTA=__NOTA__;const SET=__SET__;const SETT=__SETT__;const CAM=__CAM__;
 const DEPS=__DEPS__;const VY=__VY__;const RES=__RES__;const OFF=__OFF__;const PP=__PP__;const COD=__COD__;const VOT=__VOT__;const R=__RANK__;const MX=__MATRIX__;
 const Y=[2023,2024,2025,2026];
+const cuM=new Map(CUS.map(r=>[r[0],r])),emM=new Map(EMD.map(r=>[r[0],r])),ntM=new Map(NOTA.map(r=>[r[0],r]));
+const brl=v=>'R$ '+Number(v).toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2});
+const brlc=v=>{v=Number(v);const f=(x,s)=>'R$ '+x.toLocaleString('pt-BR',{maximumFractionDigits:x<10?2:1})+' '+s;return v>=1e9?f(v/1e9,'bi'):v>=1e6?f(v/1e6,'mi'):v>=1e3?f(v/1e3,'mil'):brl(v)};
+const n1=v=>v==null?'–':Number(v).toLocaleString('pt-BR',{minimumFractionDigits:1,maximumFractionDigits:1});
 const C='https://www.camara.leg.br';
 const nm={PL:'PL',NOVO:'Novo','MISSÃO':'Missão',PT:'PT',UNIÃO:'União',REPUBLICANOS:'Republicanos',PODE:'Podemos',SOLIDARIEDADE:'Solidariedade',AVANTE:'Avante',CIDADANIA:'Cidadania',REDE:'Rede',CENTRO:'Centro'};
 const N=s=>nm[s]||s;
@@ -440,7 +544,9 @@ const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',
 const offM=new Map(OFF.map(r=>[r[0],r])),ppM=new Map(PP.map(r=>[r[0],r])),codM=new Map(COD);
 const vyM=new Map(VY.v.map(r=>[r[0],r]));const VYM=new Map(VY.v.map(r=>[r[0],r]));const VYT=VY.tot;const resM=new Map(RES.idx.map(r=>[r[0],r]));const SUBS=RES.subs;
 const L=DEPS.map(r=>{const o=offM.get(r[0]);const y=Y.map((yr,i)=>{const b=1+i*5;return {ano:yr,prop:o[b],vot:o[b+1],p:o[b+2],aj:o[b+3],an:o[b+4]}});
-  return {id:r[0],n:r[1],p:r[2],uf:r[3],vn:r[4],vt:r[5],S:r[6],No:r[7],O:r[8],A:r[9],fi:pc(r[10]),pt:pc(r[11]),pl:pc(r[12]),gv:pc(r[13]),y,pj:ppM.get(r[0])[3],cod:codM.get(r[0])||'',rs:resM.get(r[0])||[r[0],0,0,0,0,0,0,0]}});
+  return {id:r[0],n:r[1],p:r[2],uf:r[3],vn:r[4],vt:r[5],S:r[6],No:r[7],O:r[8],A:r[9],fi:pc(r[10]),pt:pc(r[11]),pl:pc(r[12]),gv:pc(r[13]),y,pj:ppM.get(r[0])[3],cod:codM.get(r[0])||'',rs:resM.get(r[0])||[r[0],0,0,0,0,0,0,0,0],cu:cuM.get(r[0]),em:emM.get(r[0]),nt:ntM.get(r[0])}});
+const RANK=[...L].filter(d=>d.nt&&d.nt[1]!=null).sort((a,b)=>b.nt[1]-a.nt[1]);RANK.forEach((d,k)=>d.pos=k+1);
+const CMES=L.map(d=>d.nt&&d.nt[9]).filter(v=>v!=null);
 
 // ===== regra "fora do padrão": a mesma para todos os números (Tukey: abaixo de Q1 - 1,5×IQR ou acima de Q3 + 1,5×IQR)
 const qtl=(a,q)=>{const s=[...a].sort((x,y)=>x-y);const p=(s.length-1)*q,b=Math.floor(p);return s[b]+(s[Math.min(b+1,s.length-1)]-s[b])*(p-b)};
@@ -455,6 +561,7 @@ const F_vot=Y.map((_,k)=>fence(L.map(d=>d.y[k].vpct).filter(v=>v!=null)));
 const byP={};L.forEach(d=>(byP[d.p]=byP[d.p]||[]).push(d));
 const F_al={};for(const k of ['fi','pt','pl','gv']){F_al[k]={};for(const p in byP)F_al[k][p]=fence(byP[p].map(d=>d[k]).filter(v=>v!=null))}
 const F_grp=[1,2,3,4,5].map(i=>fence(L.map(d=>d.rs[i])));
+const F_cm=fence(CMES);L.forEach(d=>{d.ocm=outOf(d.nt&&d.nt[9],F_cm)});
 L.forEach(d=>{d.y.forEach((y,k)=>{y.op=outOf(y.pct,F_pres[k]);y.ov=outOf(y.vpct,F_vot[k])});
   for(const k of ['fi','pt','pl','gv'])d.o[k]=outOf(d[k],F_al[k][d.p]);d.og=[1,2,3,4,5].map((i,j)=>outOf(d.rs[i],F_grp[j]))});
 // voto diferente da maioria do partido em cada uma das 21 votações (partido atual)
@@ -473,16 +580,18 @@ const fu=document.getElementById('fu'),fp=document.getElementById('fp'),q=docume
 [...new Set(L.map(d=>d.uf))].sort().forEach(u=>fu.insertAdjacentHTML('beforeend',`<option>${u}</option>`));
 [...new Set(L.map(d=>d.p))].sort((a,b)=>N(a).localeCompare(N(b))).forEach(p=>fp.insertAdjacentHTML('beforeend',`<option value="${p}">${N(p)}</option>`));
 let lim=30;
-function row(d){const y=d.y[3],t=y.p+y.aj+y.an;
-  const pres=t?`${A(presURL(d.id,2026),y.p+'<small style="font-size:.6em;color:var(--mut)">/'+t+'</small>')}dias em 2026${y.op?'<br>'+FP:''}`:`Sem sessões<br>em 2026`;
-  return `<li class="item"><div class="av" aria-hidden="true">${ini(d.n)}</div><div><a class="nm" href="#d-${d.id}">${esc(d.n)}</a><span class="sm">${N(d.p)}-${d.uf}</span></div><div class="pr">${pres}</div></li>`}
+let ORD='nome';
+function row(d){const nt=d.nt&&d.nt[1];const cu=d.cu?d.cu[1]:0;
+  const extra=ORD==='emendas'?`${brlc(d.em?d.em[3]:0)} em emendas pagas`:`custou ${brlc(cu)}`;
+  return `<li class="item"><div class="av" aria-hidden="true">${ini(d.n)}</div><div><a class="nm" href="#d-${d.id}">${esc(d.n)}</a><span class="sm">${N(d.p)}-${d.uf}, ${extra}</span></div><div class="pr"><span class="notab" title="Nota de 0 a 10">${n1(nt)}</span><br>nota</div></li>`}
 function list(){const s=norm(q.value.trim());
-  const a=L.filter(d=>(!fu.value||d.uf===fu.value)&&(!fp.value||d.p===fp.value)&&(!s||norm(d.n).includes(s))).sort((x,y)=>x.n.localeCompare(y.n,'pt'));
+  const a=L.filter(d=>(!fu.value||d.uf===fu.value)&&(!fp.value||d.p===fp.value)&&(!s||norm(d.n).includes(s))).sort(ORD==='nota'?(x,y)=>((y.nt&&y.nt[1])??-1)-((x.nt&&x.nt[1])??-1):ORD==='custo'?(x,y)=>(y.cu?y.cu[1]:0)-(x.cu?x.cu[1]:0):ORD==='barato'?(x,y)=>((x.nt&&x.nt[9])??1e12)-((y.nt&&y.nt[9])??1e12):ORD==='emendas'?(x,y)=>(y.em?y.em[3]:0)-(x.em?x.em[3]:0):(x,y)=>x.n.localeCompare(y.n,'pt'));
   document.getElementById('cnt').textContent=a.length===1?'1 deputado':a.length+' deputados';
   document.getElementById('dl').innerHTML=a.length?a.slice(0,lim).map(row).join(''):'<li class="sm" style="padding:16px;background:#fff;border-radius:20px">Nenhum deputado encontrado com esse nome ou filtro.</li>';
   document.getElementById('more').hidden=a.length<=lim}
 [q,fu,fp].forEach(e=>e.addEventListener('input',()=>{lim=30;list()}));
 document.getElementById('more').addEventListener('click',()=>{lim+=60;list()});
+document.getElementById('ord').addEventListener('click',e=>{const b=e.target.closest('[data-o]');if(!b)return;ORD=b.dataset.o;lim=30;document.querySelectorAll('#ord .chip').forEach(c=>c.setAttribute('aria-pressed',c===b));list()});
 list();
 
 
@@ -521,6 +630,10 @@ let CACHE={};
 async function loadProps(id){if(CACHE[id])return CACHE[id];const r=await fetch('s/'+(id%64)+'.json');if(!r.ok)throw new Error('falha');const j=await r.json();CACHE={};CACHE[id]=j[id]||[];return CACHE[id]}
 function propItem(p){const [id,lab,dt,g,si,et,pr,em]=p;
   return `<div class="pi"><div class="h">${A(C+'/propostas-legislativas/'+id,esc(lab))}<span>${dt.split('-').reverse().join('/')}</span><span>${pr?'Autor principal':'Coautor'}</span>${g==='L'?`<span class="st st${et}">${ST[et]}</span>`:''}</div><p>${esc(em)||'<span class="sm">Sem resumo oficial.</span>'}</p></div>`}
+function wireEm(d){const det=document.getElementById('emlist');if(!det)return;let done=false;det.addEventListener('toggle',async()=>{if(!det.open||done)return;done=true;const box=det.querySelector('.gb');
+  try{const j=await fetch('e/'+(d.id%64)+'.json').then(r=>{if(!r.ok)throw 0;return r.json()});const it=j[d.id]||[];
+    box.innerHTML=it.map(([a,org,ds,au,emp,pg,s])=>`<div class="em"><div class="h"><b>${a}</b><span class="gtag">${SET[s]}</span></div><p>${esc(ds)}</p><span class="sm">${esc(org)}</span><div class="v"><span>Pago <b>${brl(pg)}</b></span><span>Empenhado ${brl(emp)}</span><span>Autorizado ${brl(au)}</span></div></div>`).join('')}
+  catch(e){box.innerHTML='<p class="sm">Não foi possível carregar agora. Tente de novo em instantes.</p>';done=false}})}
 function wireGroups(d){document.querySelectorAll('#pc .grp').forEach(det=>{let done=false;det.addEventListener('toggle',async()=>{if(!det.open||done)return;done=true;const box=det.querySelector('.gb');
   try{const all=(await loadProps(d.id)).filter(p=>p[3]===det.dataset.g);
     if(!all.length){box.innerHTML='<p class="sm">Nenhuma proposta neste grupo.</p>';return}
@@ -583,12 +696,77 @@ document.getElementById('rmore').addEventListener('click',()=>{RL+=50;drawR()});
 {const io=new IntersectionObserver(es=>{if(es.some(e=>e.isIntersecting)){io.disconnect();drawR()}});io.observe(document.getElementById('repetidas'))}
 
 // página do deputado
+// ===== custódromo
+{const box=document.getElementById('gauge');
+ if(!CAM){document.getElementById('custodromo').hidden=true}else{
+ const em=new Date(CAM.em||Date.now());const ini0=new Date(CAM.ano,0,1);const fim=new Date(CAM.ano+1,0,1);
+ const rate=CAM.pago/Math.max(1,(em-ini0)/1000);const cx=200,cy=200,R=160;
+ const pt=(f,r)=>{const a=Math.PI*(1-f);return [cx+r*Math.cos(a),cy-r*Math.sin(a)]};
+ const arc=(f0,f1,r)=>{const [x0,y0]=pt(f0,r),[x1,y1]=pt(f1,r);return `M${x0.toFixed(1)} ${y0.toFixed(1)}A${r} ${r} 0 0 1 ${x1.toFixed(1)} ${y1.toFixed(1)}`};
+ let ticks='';for(let k=0;k<=10;k++){const [a1,b1]=pt(k/10,R-30),[a2,b2]=pt(k/10,R-(k%5?40:48));ticks+=`<line x1="${a1}" y1="${b1}" x2="${a2}" y2="${b2}" stroke="#8f9cbb" stroke-width="${k%5?2:3}" stroke-linecap="round"/>`;if(k%5===0){const [tx,ty]=pt(k/10,R-64);ticks+=`<text x="${tx}" y="${ty+5}" text-anchor="middle" fill="#a9b5cf" font-size="15" font-weight="700" font-family="Bricolage Grotesque,sans-serif">${k*10}%</text>`}}
+ box.innerHTML=`<svg viewBox="0 0 400 218" role="img" aria-label="Velocímetro do gasto da Câmara"><path d="${arc(0,1,R)}" stroke="#1d3a6e" stroke-width="26" fill="none" stroke-linecap="round"/><path id="garc" stroke="#DDA544" stroke-width="26" fill="none" stroke-linecap="round"/>${ticks}<g id="gneedle"><line x1="200" y1="200" x2="200" y2="62" stroke="#F4F1EA" stroke-width="5" stroke-linecap="round"/></g><circle cx="200" cy="200" r="13" fill="#F4F1EA"/><circle cx="200" cy="200" r="5" fill="#061531"/></svg><div class="read"><b class="live" id="camlive"></b><span id="camsub"></span></div>`;
+ const live=document.getElementById('camlive'),garc=document.getElementById('garc'),nd=document.getElementById('gneedle');
+ const fmtR=v=>Math.floor(v).toLocaleString('pt-BR');
+ function tick(){const now=Date.now();let v=CAM.pago+rate*Math.max(0,(now-em)/1000);if(now>=fim)v=CAM.pago;const f=Math.min(1,v/CAM.orcamento);
+   live.innerHTML='<small>R$</small>'+fmtR(v);garc.setAttribute('d',arc(0,Math.max(.002,f),R));nd.setAttribute('transform',`rotate(${(-90+180*f).toFixed(2)} 200 200)`);
+   document.getElementById('camsub').textContent=`gastos em ${CAM.ano}, ${n1(100*f)}% do orçamento do ano`}
+ tick();if(!matchMedia('(prefers-reduced-motion: reduce)').matches)setInterval(tick,100);else setInterval(tick,5000);
+ const dia=rate*86400;document.getElementById('speed').innerHTML=`<div><b>${brl(rate).replace(/,\d\d$/,'')}</b><span>por segundo</span></div><div><b>${brlc(dia)}</b><span>por dia</span></div><div><b>${brlc(dia/513)}</b><span>por dia, dividido pelos 513 deputados</span></div>`;
+ document.getElementById('camnota').innerHTML=`Valor oficial: ${A('https://www.camara.leg.br/transparencia/',brlc(CAM.pago)+' pagos em '+CAM.ano)}, ${n1(CAM.pct)}% do orçamento previsto de ${brlc(CAM.orcamento)}, lido em __DATA__. O contador avança no ritmo médio do ano (estimativa) até a próxima leitura. <a href="#nota">Como funciona</a>`}}
+
+// ===== emendas por setor (todos)
+const STIP=k=>/^Transfer/.test(SET[k]);
+function bars(vals,tot){const o=vals.map((v,k)=>[k,v]).filter(x=>x[1]>0).sort((a,b)=>b[1]-a[1]);const mx=o.length?o[0][1]:1;
+  return o.map(([k,v])=>`<div class="r"><b>${SET[k]}</b><span>${brlc(v)}</span><i class="${STIP(k)?'tr':''}" style="width:${(100*v/mx).toFixed(1)}%"></i><em>${n1(100*v/tot)}% do total</em></div>`).join('')}
+{const tot=SETT.reduce((a,b)=>a+b,0);document.getElementById('settot').innerHTML=`<b>${brl(tot)}</b> pagos em emendas indicadas pelos ${fmt(EMD.filter(r=>r[3]>0).length)} deputados atuais que tiveram emendas pagas.`;document.getElementById('setbars').innerHTML=bars(SETT,tot)}
+
+// ===== comparar
+const lbl=d=>`${d.n} (${N(d.p)}-${d.uf})`;const byLbl=new Map(L.map(d=>[norm(lbl(d)),d]));
+document.getElementById('dnames').innerHTML=[...L].sort((a,b)=>a.n.localeCompare(b.n,'pt')).map(d=>`<option value="${esc(lbl(d))}">`).join('');
+const findDep=s=>{s=norm(s.trim());if(!s)return null;return byLbl.get(s)||L.find(d=>norm(d.n)===s)||L.find(d=>norm(d.n).startsWith(s))||L.find(d=>norm(d.n).includes(s))};
+const CRIT=[['Presença no plenário',2,6,v=>n1(v)+'%',true,(a,b,va,vb)=>`${a} esteve presente em ${n1(va)}% dos dias de sessão; ${b}, em ${n1(vb)}%.`],
+ ['Participação nas votações',3,7,v=>n1(v)+'%',true,(a,b,va,vb)=>`${a} votou em ${n1(va)}% das votações do plenário; ${b}, em ${n1(vb)}%.`],
+ ['Leis que avançaram',4,8,v=>fmt(v),true,(a,b,va,vb)=>`${a} é autor principal de ${fmt(va)} ${va===1?'projeto que virou lei ou foi aprovado':'projetos que viraram lei ou foram aprovados'} na Câmara; ${b}, de ${fmt(vb)}.`],
+ ['Custo por mês',5,9,v=>brlc(v),false,(a,b,va,vb)=>`${a} gastou em média ${brlc(va)} por mês de cota e gabinete; ${b}, ${brlc(vb)}.`]];
+function comparar(da,db){const box=document.getElementById('cres');
+  if(!da||!db){box.innerHTML='<p class="sm">Não achei um dos nomes. Comece a digitar e escolha na lista.</p>';return}
+  if(da===db){box.innerHTML='<p class="sm">Escolha dois deputados diferentes.</p>';return}
+  const na=da.nt[1],nb=db.nt[1];const wa=na!=null&&(nb==null||na>nb),wb=nb!=null&&(na==null||nb>na);
+  const side=(d,w)=>`<div class="side${w?' win':''}">${w?'<span class="crown">Melhor performance</span>':''}<div class="av" aria-hidden="true">${ini(d.n)}</div><a href="#d-${d.id}">${esc(d.n)}</a><span class="sm">${N(d.p)}-${d.uf}</span><div class="nt">${n1(d.nt[1])}<small> /10</small></div><span class="sm">${d.pos?d.pos+'º de '+RANK.length:'sem nota'}</span></div>`;
+  const ganhou={a:[],b:[]};
+  const rows=CRIT.map(([t,si,ri,f,mm,why])=>{const va=da.nt[ri],vb=db.nt[ri];let w='';
+    if(va!=null&&vb!=null&&va!==vb){w=(mm?va>vb:va<vb)?'a':'b';ganhou[w].push(t.toLowerCase())}
+    const cell=(v,s,me)=>`<div class="${w===me?'w':''}">${v==null?'–':f(v)}<small>nota ${n1(s)} neste critério</small></div>`;
+    return `<div class="crit"><h3>${t}</h3><div class="two">${cell(va,da.nt[si],'a')}${cell(vb,db.nt[si],'b')}</div><p>${va==null||vb==null?'Um dos dois ficou sem nota neste critério por ter pouco tempo de mandato.':why(da.n,db.n,va,vb)}</p></div>`}).join('');
+  const info=(t,fa,fb)=>`<div class="crit"><h3>${t}</h3><div class="two"><div>${fa}</div><div>${fb}</div></div></div>`;
+  const W=wa?da:wb?db:null,Lz=wa?db:da;const gW=wa?ganhou.a:ganhou.b,gL=wa?ganhou.b:ganhou.a;
+  const lista=a=>a.length>1?a.slice(0,-1).join(', ')+' e '+a[a.length-1]:a[0]||'';
+  const ver=W?`<b>${esc(W.n)} tem a melhor performance</b> pela regra do site: nota ${n1(W.nt[1])} contra ${n1(Lz.nt[1])}.${gW.length?' Vai melhor em '+lista(gW)+'.':''}${gL.length?' '+esc(Lz.n)+' vai melhor em '+lista(gL)+'.':''}`:`<b>Empate</b> na nota (${n1(na)}).`;
+  box.innerHTML=`<div class="vs2">${side(da,wa)}${side(db,wb)}</div><div class="verdict">${ver} <a href="#nota">Como a nota é calculada</a></div>${rows}
+  ${info('Custo do mandato até hoje',brlc(da.cu[1]),brlc(db.cu[1]))}${info('Emendas pagas',brlc(da.em[3]),brlc(db.em[3]))}${info('Propostas apresentadas (2023 a 2026)',fmt(da.rs.slice(1,6).reduce((x,y)=>x+y,0)),fmt(db.rs.slice(1,6).reduce((x,y)=>x+y,0)))}${info('Votou com o próprio partido',da.fi==null?'–':f1(da.fi),db.fi==null?'–':f1(db.fi))}
+  <p class="sm" style="margin-top:12px">Link desta comparação: <a href="#c-${da.id}-${db.id}">copie o endereço da página</a>.</p>`}
+document.getElementById('cform').addEventListener('submit',e=>{e.preventDefault();const a=findDep(document.getElementById('ca').value),b=findDep(document.getElementById('cb').value);if(a&&b&&a!==b)history.replaceState(null,'','#c-'+a.id+'-'+b.id);comparar(a,b)});
+
 const lab={S:'Sim',N:'Não',O:'Obstrução',A:'Abstenção',P:'Presidia',['-']:'Não votou'};
 function depPage(d){
   const ys=d.y,y25=ys[2];
   const ostat=(cls,val,lab)=>`<div class="stat${cls?' o':''}"><b>${val}</b><span>${lab}${cls?'<br>'+FP:''}</span></div>`;
   const vy=VYM.get(d.id)||[0,0,0,0,0];
-  const stats=`<div class="stats">${ostat(y25.op,y25.pct==null?'–':Math.round(y25.pct)+'%','presença no plenário em 2025')}${ostat(y25.ov,y25.vpct==null?'–':Math.round(y25.vpct)+'%','das votações de 2025 em que votou')}${ostat(d.og[0],fmt(d.rs[1]),'propostas de lei de 2023 a 2026')}</div>`;
+  const cu=d.cu||[d.id,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],em=d.em||[d.id,0,0,0,0,SET.map(()=>0)],nt=d.nt||[d.id,null,null,null,null,null,null,null,null,null];
+  const money=`<div class="money"><div><b>${brlc(cu[1])}</b><span>custou aos cofres públicos de 2023 até hoje <a href="#custo">ver a conta</a></span></div><div><b>${em[6]?'–':brlc(em[3])}</b><span>${em[6]?'emendas: a Câmara não publica a página dele':'em emendas já pagas'} <a href="#emd">ver para onde foram</a></span></div></div>`;
+  const stats=`<div class="stats">${ostat(y25.op,y25.pct==null?'–':Math.round(y25.pct)+'%','presença no plenário em 2025')}${ostat(y25.ov,y25.vpct==null?'–':Math.round(y25.vpct)+'%','das votações de 2025 em que votou')}${ostat(false,n1(nt[1]),'nota de 0 a 10'+(d.pos?', '+d.pos+'º de '+RANK.length:''))}</div>`;
+  const cr=(t,s,v)=>`<div class="crow"><span>${t}</span><b>${s==null?'–':n1(s)}</b><div class="bar"><i style="width:${s==null?0:s*10}%"></i></div><span class="sm">${v}</span></div>`;
+  const notaCard=`<div class="card" id="ntc"><h2>Nota ${n1(nt[1])}</h2><p class="why">${d.pos?`${d.pos}º lugar entre ${RANK.length} deputados com nota. `:''}Média de quatro critérios, cada um de 0 a 10 conforme a posição dele entre todos os deputados. <a href="#nota">Como a nota é calculada</a></p>
+   ${cr('Presença no plenário',nt[2],nt[6]==null?'Pouco tempo de mandato':n1(nt[6])+'% dos dias de sessão, de 2023 a 2026')}${cr('Participação nas votações',nt[3],nt[7]==null?'Pouco tempo de mandato':n1(nt[7])+'% das votações nominais do plenário')}${cr('Leis que avançaram',nt[4],fmt(nt[8]||0)+' como autor principal (viraram lei ou foram aprovadas na Câmara)')}${cr('Custo por mês (menos é melhor)',nt[5],nt[9]==null?'Pouco tempo de mandato':brlc(nt[9])+' por mês de cota e gabinete'+(d.ocm?' '+FP:''))}
+   <p style="margin-top:12px"><a href="#c-${d.id}-${(RANK[0]&&RANK[0].id!==d.id?RANK[0]:RANK[1]).id}">Comparar com outro deputado</a></p></div>`;
+  const cy=Y.map((y,k)=>{const b=2+4*k,tt=cu[b]+cu[b+1]+cu[b+2];return `<tr><td>${A(C+'/deputados/'+d.id+'?ano='+y,y)}</td><td>${brlc(cu[b+2])}<br><span class="sm">${cu[b+3]} meses</span></td><td>${brlc(cu[b])}</td><td>${brlc(cu[b+1])}</td><td><b>${brlc(tt)}</b></td></tr>`}).join('');
+  const custoCard=`<div class="card" id="custo"><h2>Quanto custou: ${brl(cu[1])}</h2><p class="why">Salário, cota parlamentar e verba de gabinete de 2023 até o último mês publicado pela Câmara. Toque no ano para ver a página oficial com os gastos mês a mês.${d.ocm?' '+FP+' no custo por mês.':''}</p>
+   <div class="scroll"><table><thead><tr><th>Ano</th><th>Salário</th><th>Cota parlamentar</th><th>Verba de gabinete</th><th>Total</th></tr></thead><tbody>${cy}</tbody></table></div>
+   <p class="sm" style="margin-top:10px">Não entram imóvel funcional, auxílio-moradia, plano de saúde, previdência, 13º e ajuda de custo, porque a Câmara não publica esses valores por deputado. <a href="#nota">Como calculamos</a></p></div>`;
+  const emdCard=`<div class="card" id="emd"><h2>Emendas pagas: ${brl(em[3])}</h2><p class="why">Dinheiro do Orçamento indicado por ele que já foi pago, nos Orçamentos de 2023 a 2026. Para comparar: ${brlc(em[1])} foram autorizados e ${brlc(em[2])} empenhados (reservados), mas só conta como entregue o que foi pago.</p>
+   ${em[6]?`<p class="warn" style="display:block">A Câmara não publica a página de emendas deste deputado (o endereço oficial dá "página não encontrada"), então não temos como mostrar as emendas dele.</p>`:em[3]>0?`<h3>Para qual setor foi</h3><div class="hb">${bars(em[5],em[3])}</div>`:'<p>Nenhuma emenda paga encontrada para este deputado de 2023 a 2026.</p>'}
+   ${em[4]?`<details class="grp" id="emlist"><summary><b>Ver as ${fmt(em[4])} emendas, uma por uma</b><span class="n">${fmt(em[4])}</span><span class="d">Órgão, ação, local e valores autorizado, empenhado e pago</span></summary><div class="gb">Carregando…</div></details>`:''}
+   <p class="sm" style="margin-top:10px">Fonte: ${Y.map(y=>A(C+'/deputados/'+d.id+'/todas-emendas?ano='+y,'emendas de '+y)).join(', ')} no site da Câmara.</p></div>`;
   const outs=[];ys.forEach(y=>{if(y.op)outs.push(`presença ${y.op} do comum em ${y.ano} (${Math.round(y.pct)}%)`);if(y.ov)outs.push(`votou em menos ou mais votações que o comum em ${y.ano} (${Math.round(y.vpct)}%)`)});
   const nmK={fi:'com o próprio partido',pt:'com a maioria do PT',pl:'com a maioria do PL',gv:'com a orientação do Governo'};
   for(const k in nmK)if(d.o[k])outs.push(`votou ${nmK[k]} ${d.o[k]==='abaixo'?'bem menos':'bem mais'} que os colegas do ${N(d.p)} (${f1(d[k])})`);
@@ -601,9 +779,10 @@ function depPage(d){
   const votes=VOT.map((v,i)=>{const c=d.cod[i]||'-';const o=d.ov21[i];return `<div class="vote${o?' o':''}"><div class="vt">${esc(v[6])}${o?`<br><span class="fp">diferente da maioria do ${N(d.p)}</span>`:''}</div><span class="tag t${c}">${lab[c]}</span><div class="vm">${dt(v[1])}, ${A(C+'/propostas-legislativas/'+v[3],v[2])}, ${A(votURL(d.id,v[1].slice(0,4)),'ver voto no site da Câmara')}</div></div>`}).join('');
   const al=(k,t)=>{const v=d[k];if(v==null)return '';const o=d.o[k];return `<div class="ln"><span>${t} ${o?FP:''}</span>${A(SRC,f1(v))}</div><div class="bar${o?' o':''}"><i style="width:${v}%"></i></div>`};
   return `<div class="dhero"><div class="w"><a class="back" href="#busca">← Todos os deputados</a>
-  <div class="fig"><div class="head"><div class="bigav" aria-hidden="true">${ini(d.n)}</div><div><h1>${esc(d.n)}</h1><div class="tagp"><span>${N(d.p)}</span><span>${UFN[d.uf]||d.uf}</span>${A(C+'/deputados/'+d.id,'Página oficial')}</div></div></div>${stats}</div></div></div>
+  <div class="fig"><div class="head"><div class="bigav" aria-hidden="true">${ini(d.n)}</div><div><h1>${esc(d.n)}</h1><div class="tagp"><span>${N(d.p)}</span><span>${UFN[d.uf]||d.uf}</span>${A(C+'/deputados/'+d.id,'Página oficial')}</div></div></div>${money}${stats}</div></div></div>
   <div class="sheet depbody"><div class="w">
   ${outs.length?`<div class="fpnote"><div><b>O que sai do padrão neste deputado</b><ul>${outs.map(o=>'<li>'+esc(o)+'</li>').join('')}</ul><a href="#padrao">Como definimos "fora do padrão"</a></div></div>`:`<div class="fpnote"><div>Nenhum número deste deputado sai do padrão. <a href="#padrao">Como definimos</a></div></div>`}
+  ${notaCard}${custoCard}${emdCard}
   <div class="card"><h2>Presença no plenário</h2><p class="why">Cada bolinha é um dia com sessão de votação. <span class="keyd"><i></i>presente</span><span class="keyd"><i class="j"></i>falta justificada</span><span class="keyd"><i class="n"></i>falta sem justificativa</span><br>Toque no número para ver a lista oficial de cada dia.</p>${presY}</div>
   <div class="card"><h2>Votações e propostas</h2><p class="why">Em quantas votações nominais do plenário ele votou Sim, Não, Obstrução ou Abstenção, de quantas houve no ano. Ao lado, todas as propostas que apresentou (projetos, requerimentos, indicações e outros pedidos).</p>
   <div class="scroll"><table><thead><tr><th>Ano</th><th>Votou</th><th>Propostas apresentadas</th></tr></thead><tbody>${votRows}</tbody></table></div>
@@ -616,8 +795,11 @@ function depPage(d){
   <p class="sm">Votos registrados: ${A(SRC,fmt(d.S))} Sim, ${A(SRC,fmt(d.No))} Não, ${A(SRC,fmt(d.O))} Obstrução e ${A(SRC,fmt(d.A))} outros</p></div>
   <p style="margin-top:20px"><a class="back" href="#busca" style="color:var(--gold3)">← Todos os deputados</a></p></div></div>`}
 const home=document.getElementById('home'),dep=document.getElementById('dep');
+document.addEventListener('click',e=>{const a=e.target.closest('a[href="#custo"],a[href="#emd"],a[href="#ntc"]');if(!a||dep.hidden)return;e.preventDefault();const t=document.getElementById(a.getAttribute('href').slice(1));if(t)t.scrollIntoView({behavior:'smooth'})});
 function route(){const m=location.hash.match(/^#d-(\d+)$/);const d=m&&L.find(x=>x.id==m[1]);
-  if(d){dep.innerHTML=depPage(d);wireGroups(d);home.hidden=true;dep.hidden=false;window.scrollTo(0,0);document.title=d.n+' · Placar da Câmara'}
+  const mc=location.hash.match(/^#c-(\d+)-(\d+)$/);
+  if(mc){const a=L.find(x=>x.id==mc[1]),b=L.find(x=>x.id==mc[2]);dep.hidden=true;home.hidden=false;if(a)document.getElementById('ca').value=lbl(a);if(b)document.getElementById('cb').value=lbl(b);comparar(a,b);document.getElementById('comparar').scrollIntoView();return}
+  if(d){dep.innerHTML=depPage(d);wireGroups(d);wireEm(d);home.hidden=true;dep.hidden=false;window.scrollTo(0,0);document.title=d.n+' · Placar da Câmara'}
   else{dep.hidden=true;home.hidden=false;document.title='Placar da Câmara';if(location.hash&&!location.hash.startsWith('#d-')){const t=document.querySelector(location.hash);if(t)t.scrollIntoView()}}}
 window.addEventListener('hashchange',route);route();
 }

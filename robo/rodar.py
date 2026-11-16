@@ -122,8 +122,16 @@ def coletar_emendas(ids):
     res = {}
 
     def pag(i, a, n):
-        h = baixar.pagina(f"https://www.camara.leg.br/deputados/{i}/todas-emendas?ano={a}&pagina={n}", minimo=15000)
-        return custos.ler_emendas(h) if h else None
+        url = f"https://www.camara.leg.br/deputados/{i}/todas-emendas?ano={a}&pagina={n}"
+        try:
+            r = baixar.S.get(url, timeout=60)
+        except Exception:
+            return None
+        if r.status_code == 404 and n == 1 and "não encontrada" in r.text:
+            return -1, []  # a Câmara não tem página de emendas para este deputado
+        if r.status_code != 200 or len(r.text) < 15000:
+            return None
+        return custos.ler_emendas(r.text)
 
     def um(t):
         i, a = t
@@ -135,6 +143,8 @@ def coletar_emendas(ids):
         if r is None:
             return t, None
         total, itens = r
+        if total < 0:
+            return t, r
         for n in range(2, custos.paginas_necessarias(total) + 1):
             rn = None
             for _ in range(3):
@@ -176,7 +186,8 @@ def calcular_custos_emendas(deps, CUS, EM, OFF, DEPS, RES, saida):
                 s = si[custos.setor(org, desc)]
                 aut += au; emp += em; pago += pg; por[s] += pg; setor_tot[s] += pg
                 itens.append([a, org, desc, au, em, pg, s])
-        EMD.append([i, round(aut, 2), round(emp, 2), round(pago, 2), len(itens), [round(x, 2) for x in por]])
+        sem = int(all((EM.get((i, a)) or [0])[0] < 0 for a in ANOS))
+        EMD.append([i, round(aut, 2), round(emp, 2), round(pago, 2), len(itens), [round(x, 2) for x in por], sem])
         itens.sort(key=lambda x: (-x[0], -x[5]))
         shards[i % 64][i] = itens
     os.makedirs(os.path.join(saida, "e"), exist_ok=True)
@@ -520,7 +531,10 @@ def conferir(atual, anterior, OFF, deps, stats_v, stats_p, CUS=None, EM=None, CA
         falt = [k for k, v in EM.items() if v is None]
         if falt:
             prob.append(f"{len(falt)} listas de emendas não foram lidas (ex.: {falt[:3]})")
-        incomp = [k for k, v in EM.items() if v is not None and len(v[1]) != v[0]]
+        incomp = [k for k, v in EM.items() if v is not None and v[0] >= 0 and len(v[1]) != v[0]]
+        sem = {k[0] for k, v in EM.items() if v is not None and v[0] < 0}
+        if len(sem) > 40:
+            prob.append(f"{len(sem)} deputados sem página de emendas no site da Câmara (esperado no máximo 40)")
         if incomp:
             prob.append(f"{len(incomp)} listas de emendas vieram incompletas (ex.: {incomp[:3]})")
     if CUS is not None:
@@ -611,6 +625,8 @@ def main():
             log(f"  {sum(v is not None for v in EM.values())} de {len(EM)} listas de emendas lidas, {sum(len(v[1]) for v in EM.values() if v):,} emendas")
             CAM = coletar_gasto_camara()
             log(f"  gasto da Câmara: {CAM}")
+        if CAM and not CAM.get("em"):
+            CAM["em"] = hoje.isoformat()
         if a.salvar_coleta:
             S = lambda d: {f"{k[0]}-{k[1]}": v for k, v in d.items()}
             json.dump({"OFF": S(OFF), "CUS": S(CUS), "EM": S(EM), "CAM": CAM}, open(a.salvar_coleta, "w"), ensure_ascii=False)
