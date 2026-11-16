@@ -8,7 +8,7 @@ import os, time, json, concurrent.futures as cf
 import requests
 
 BASE = "https://dadosabertos.camara.leg.br"
-UA = {"User-Agent": "placar-da-camara/1.0 (+https://github.com/mateuszani/placar-da-camara)"}
+UA = {"User-Agent": "placar-da-camara/1.0 (+https://github.com/mateuszani/rankingdadireitaplacardacamara)"}
 S = requests.Session()
 S.headers.update(UA)
 

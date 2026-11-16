@@ -23,7 +23,7 @@ from classificar import grupo, etapa
 
 RAIZ = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 ANOS = [2023, 2024, 2025, 2026]  # 57ª legislatura (o site foi desenhado para estes 4 anos)
-SITE_URL = "https://mateuszani.github.io/placar-da-camara/"
+SITE_URL = "https://mateuszani.github.io/rankingdadireitaplacardacamara/"
 CENTRO = ["MDB", "PSD", "PP", "UNIÃO", "REPUBLICANOS"]
 PARTIDOS = ['PL', 'PT', 'UNIÃO', 'PP', 'PSD', 'REPUBLICANOS', 'MDB', 'PSB', 'PDT', 'PSOL', 'PODE', 'PSDB', 'NOVO', 'MISSÃO',
             'PCdoB', 'AVANTE', 'SOLIDARIEDADE', 'PV', 'CIDADANIA', 'REDE', 'PRD']

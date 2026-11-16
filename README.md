@@ -4,7 +4,7 @@ O que cada um dos 513 deputados federais fez, só com dados oficiais da Câmara 
 presença no plenário, propostas separadas em grupos fáceis de entender, votos e com quem cada um vota junto.
 Um projeto do **Ranking da Direita**.
 
-**Site:** https://mateuszani.github.io/placar-da-camara/
+**Site:** https://mateuszani.github.io/rankingdadireitaplacardacamara/
 
 ## O robô
 
