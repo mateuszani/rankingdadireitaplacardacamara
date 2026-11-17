@@ -1,4 +1,4 @@
-"""Robô do Placar da Câmara.
+"""Robô do Radar NasRuas Câmara Federal.
 
 1. Baixa de novo os dados oficiais da Câmara (arquivos de votações, proposições,
    lista de deputados e a página oficial de cada deputado).
@@ -687,7 +687,7 @@ def main():
         resumo = os.environ.get("GITHUB_STEP_SUMMARY")
         if resumo:
             with open(resumo, "a") as f:
-                f.write("## Robô do Placar da Câmara\n\n")
+                f.write("## Robô do Radar NasRuas Câmara Federal\n\n")
                 f.write("**Resultado:** " + ("publicado ✅" if rel.get("ok") else "NÃO publicado: o site continua com a última versão boa ❌") + "\n\n")
                 for p in rel.get("problemas", []):
                     f.write(f"- {p}\n")

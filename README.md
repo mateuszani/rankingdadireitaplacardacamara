@@ -1,10 +1,10 @@
-# Placar da Câmara
+# Radar NasRuas Câmara Federal
 
 O que cada um dos 513 deputados federais fez, só com dados oficiais da Câmara dos Deputados:
 presença no plenário, propostas separadas em grupos fáceis de entender, votos, com quem cada um vota junto,
 quanto custou o mandato, as emendas já pagas por setor, uma nota de 0 a 10 com regra pública, o comparativo entre dois deputados
 e o Custódromo com o gasto da Câmara no ano.
-Um projeto do **Ranking da Direita**.
+Um projeto do **movimento NasRuas**.
 
 **Site:** https://mateuszani.github.io/rankingdadireitaplacardacamara/
 
@@ -29,7 +29,7 @@ Todo dia às 03:17 (horário de Brasília) o GitHub roda `robo/rodar.py`, que:
 4. só se tudo passar, monta o site em `saida/` e publica no GitHub Pages.
 
 Se a conferência falhar, a rodada aparece com ❌ na aba **Actions**, com a lista dos problemas,
-e o site continua com a última versão boa. Para rodar na hora: aba **Actions** → *Atualizar o Placar da Câmara* → **Run workflow**
+e o site continua com a última versão boa. Para rodar na hora: aba **Actions** → *Atualizar o Radar NasRuas Câmara Federal* → **Run workflow**
 (desmarque *Publicar* para só testar: o resultado fica no artefato `teste`).
 
 ## Arquivos
