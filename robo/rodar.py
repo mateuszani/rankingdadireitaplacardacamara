@@ -348,7 +348,7 @@ def calcular_votacoes(dd, deps, titulos):
     # últimas 20 votações nominais do plenário de cada deputado: [data, descrição, voto, sim, não]
     ULT = {}
     for dep, g in mine.sort_values("data", ascending=False).groupby("deputado_id", sort=False):
-        ULT[int(dep)] = [[r.data[:10], _txt(plen.descricao.get(r.idVotacao))[:300], r.voto,
+        ULT[int(dep)] = [[r.data[:10], _txt(plen.descricao.get(r.idVotacao))[:300], _txt(r.voto) or "Sem registro",
                           _int(plen.votosSim.get(r.idVotacao)), _int(plen.votosNao.get(r.idVotacao))]
                          for r in g.head(20).itertuples()]
     st = {}
