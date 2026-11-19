@@ -259,6 +259,33 @@ def _int(v):
         return 0
 
 
+def carregar_posicoes():
+    try:
+        c = json.load(open(os.path.join(RAIZ, "robo", "posicoes_nasruas.json"), encoding="utf-8"))
+    except FileNotFoundError:
+        c = {}
+    c.setdefault("ativa", False); c.setdefault("minimo_votacoes", 10); c.setdefault("votacoes", {})
+    c.setdefault("pesos", {"alinhamento": 0.60, "custo": 0.20, "merito": 0.15, "presenca": 0.05})
+    return c
+
+
+def nota_nasruas(NOTA, ALIN, cfg):
+    """Nota Nas Ruas: alinhamento (0-10 pela % de votos iguais à posição do movimento) + custo, mérito e presença
+    (as mesmas notas de 0 a 10 por posição entre os colegas). Devolve {id: [nota, alinhamento%, n_votacoes]}."""
+    p = cfg["pesos"]; out = {}
+    for r in NOTA:
+        i, sp, sv_, sl, sc_ = r[0], r[2], r[3], r[4], r[5]
+        a = ALIN.get(i)
+        if not a or a[1] < cfg["minimo_votacoes"]:
+            out[i] = [None, a[0] if a else None, a[1] if a else 0]
+            continue
+        pres = [x for x in (sp, sv_) if x is not None]
+        partes = [(p["alinhamento"], a[0] / 10), (p["custo"], sc_), (p["merito"], sl), (p["presenca"], sum(pres) / len(pres) if pres else None)]
+        partes = [(w, x) for w, x in partes if x is not None]
+        out[i] = [round(sum(w * x for w, x in partes) / sum(w for w, _ in partes), 1), a[0], a[1]]
+    return out
+
+
 def calcular_votacoes(dd, deps, titulos):
     vot = ler(dd, "votacoes", ["id", "data", "siglaOrgao", "descricao", "votosSim", "votosNao"])
     vv = ler(dd, "votacoesVotos", ["idVotacao", "voto", "deputado_id", "deputado_siglaPartido"])
@@ -383,6 +410,24 @@ def calcular_votacoes(dd, deps, titulos):
         if r.idVotacao in GOV:
             s["govT"] += 1; s["gov"] += GOV[r.idVotacao] == mine_v
     import bisect
+    # alinhamento com a posição do Nas Ruas (robo/posicoes_nasruas.json); faltar, abster ou obstruir conta como não alinhado
+    NRC = carregar_posicoes()
+    ALIN = {}
+    if NRC["votacoes"]:
+        marc = {k: v for k, v in NRC["votacoes"].items() if k in data and v.get("posicao") in ("S", "N")}
+        votos_dep = collections.defaultdict(dict)
+        for r in mine[mine.idVotacao.isin(list(marc))].itertuples():
+            votos_dep[r.deputado_id][r.idVotacao] = r.k
+        for dep, s_ in st.items():
+            tot = ok = 0.0; n = 0
+            for k, v in marc.items():
+                if not (s_["first"] <= data[k] <= s_["last"]):
+                    continue  # fora do período em que o deputado votou no plenário
+                w = float(v.get("peso") or 1); n += 1; tot += w
+                meu = {"s": "S", "n": "N"}.get(votos_dep[dep].get(k))
+                ok += w * (meu == v["posicao"])
+            if n:
+                ALIN[int(dep)] = [round(100 * ok / tot, 1), n]
     pc = lambda a, b: round(100 * a / b, 1) if b else ""
     DEPS, VYv = [], []
     for d in deps:
@@ -424,7 +469,7 @@ def calcular_votacoes(dd, deps, titulos):
         a = cod.setdefault(r.deputado_id, ["-"] * len(sel))
         a[idx[r.idVotacao]] = {"Sim": "S", "Não": "N", "Obstrução": "O", "Abstenção": "A", "Artigo 17": "P"}.get(r.voto, "-")
     COD = [[d["id"], "".join(cod.get(str(d["id"]), ["-"] * len(sel)))] for d in deps]
-    stats = {"plen_por_ano": R["meta"]["porAno"], "votacoes": len(ids), "votos": int(len(vv)), "placar": placar_ok, "ult": ULT}
+    stats = {"plen_por_ano": R["meta"]["porAno"], "votacoes": len(ids), "votos": int(len(vv)), "placar": placar_ok, "ult": ULT, "alin": ALIN, "nr_marcadas": len(NRC["votacoes"])}
     return R, MX, DEPS, VY, sel, COD, stats
 
 
@@ -664,6 +709,17 @@ def main():
         RES, PP, sp = calcular_propostas(a.dados, deps, saida)
         log(f"  {sp['propostas']:,} propostas, {sp['assinaturas']:,} assinaturas dos deputados atuais")
         CU, EMD, NOTA, SET, sc = calcular_custos_emendas(deps, CUS, EM, OFF, DEPS, RES, saida)
+        NRC = carregar_posicoes(); NR = None
+        if sv["alin"]:
+            NRn = nota_nasruas(NOTA, sv["alin"], NRC)
+            com = [v for v in NRn.values() if v[0] is not None]
+            log(f"  nota Nas Ruas: {len(NRC['votacoes'])} votações marcadas, {len(com)} deputados com nota nova"
+                + (f", média {sum(v[0] for v in com) / len(com):.1f}" if com else "") + ("" if NRC["ativa"] else " (ainda não ativa no site)"))
+            if NRC["ativa"] and com:
+                NR = {"pesos": NRC["pesos"], "n": len([k for k, v in NRC["votacoes"].items() if v.get("posicao") in ("S", "N")]),
+                      "minimo": NRC["minimo_votacoes"], "a": {i: v[1:] for i, v in NRn.items()}}
+                for r in NOTA:
+                    r[1] = NRn[r[0]][0]
         log(f"  custo dos mandatos: R$ {sc['custo_total']:,.2f}; emendas pagas: R$ {sc['emendas_pago']:,.2f}")
         atual = {"data": hoje.strftime("%d/%m/%Y"), "arquivos": meta,
                  "contagens": {"votacoes": sv["votacoes"], "votos": sv["votos"], "propostas": sp["propostas"],
@@ -695,7 +751,7 @@ def main():
                "__NPROP__": f"{sp['propostas']:,}".replace(",", "."), "__NASS__": f"{sp['assinaturas']:,}".replace(",", "."),
                "__NVOT__": f"{sv['votacoes']:,}".replace(",", "."), "__ULTIMA__": "/".join(R["meta"]["ultimaVotacao"][:10].split("-")[::-1]),
                "__N21__": str(len(VOT)), "__CUS__": J(CU), "__EMD__": J(EMD), "__NOTA__": J(NOTA), "__SET__": J(SET),
-               "__SETT__": J(sc["setores"]), "__CAM__": J(CAM)}
+               "__SETT__": J(sc["setores"]), "__CAM__": J(CAM), "__NR__": J(NR)}
         if a.salvar_rep:
             json.dump(rep, open(a.salvar_rep, "w"), ensure_ascii=False)
         for k, v in rep.items():
