@@ -172,11 +172,13 @@ def calcular_custos_emendas(deps, CUS, EM, OFF, DEPS, RES, saida):
     """Custo do mandato, emendas pagas por setor e a nota de cada deputado."""
     SET = custos.NOMES_SETORES
     si = {s: k for k, s in enumerate(SET)}
-    CU, EMD, shards = [], [], collections.defaultdict(dict)
+    CU, EMD, shards, gshards = [], [], collections.defaultdict(dict), collections.defaultdict(dict)
     setor_tot = [0.0] * len(SET)
     for d in deps:
         i = d["id"]
-        anos = [CUS.get((i, a)) or [0, 0, 0, 0] for a in ANOS]
+        anos = [(CUS.get((i, a)) or [0, 0, 0, 0])[:4] for a in ANOS]
+        gshards[i % 64][i] = [[a] + (CUS.get((i, a)) or [0] * 5)[4] for a in ANOS
+                              if CUS.get((i, a)) and len(CUS[(i, a)]) > 4 and any(sum(x) for x in CUS[(i, a)][4])]
         tot = round(sum(x[0] + x[1] + x[2] for x in anos), 2)
         CU.append([i, tot] + sum([list(x) for x in anos], []))
         aut = emp = pago = 0.0; por = [0.0] * len(SET); itens = []
@@ -191,8 +193,11 @@ def calcular_custos_emendas(deps, CUS, EM, OFF, DEPS, RES, saida):
         itens.sort(key=lambda x: (-x[0], -x[5]))
         shards[i % 64][i] = itens
     os.makedirs(os.path.join(saida, "e"), exist_ok=True)
+    os.makedirs(os.path.join(saida, "g"), exist_ok=True)
     for k in range(64):
         json.dump(shards.get(k, {}), open(os.path.join(saida, "e", f"{k}.json"), "w"), ensure_ascii=False, separators=(",", ":"))
+        # gasto mês a mês de cada deputado: {id: [[ano, [cota x12], [gabinete x12]], ...]}
+        json.dump(gshards.get(k, {}), open(os.path.join(saida, "g", f"{k}.json"), "w"), ensure_ascii=False, separators=(",", ":"))
 
     # ---- nota: 4 critérios, mesma regra para todos (ver texto "Como a nota é calculada" no site)
     dep_by = {r[0]: r for r in DEPS}
@@ -241,6 +246,17 @@ def pos_of(s, n, o):
     if n + o > s:
         return "N"
     return None
+
+
+def _txt(v):
+    return "" if v is None or (isinstance(v, float) and v != v) else str(v)
+
+
+def _int(v):
+    try:
+        return int(float(v))
+    except (TypeError, ValueError):
+        return 0
 
 
 def calcular_votacoes(dd, deps, titulos):
@@ -329,6 +345,12 @@ def calcular_votacoes(dd, deps, titulos):
     dep_ids = [str(d["id"]) for d in deps]
     mine = vv[vv.deputado_id.isin(dep_ids)]
     pos_dt = sorted(data.values())
+    # últimas 20 votações nominais do plenário de cada deputado: [data, descrição, voto, sim, não]
+    ULT = {}
+    for dep, g in mine.sort_values("data", ascending=False).groupby("deputado_id", sort=False):
+        ULT[int(dep)] = [[r.data[:10], _txt(plen.descricao.get(r.idVotacao))[:300], r.voto,
+                          _int(plen.votosSim.get(r.idVotacao)), _int(plen.votosNao.get(r.idVotacao))]
+                         for r in g.head(20).itertuples()]
     st = {}
     for r in mine.itertuples():
         s = st.setdefault(r.deputado_id, {"n": 0, "S": 0, "N": 0, "O": 0, "A": 0, "first": r.data, "last": r.data,
@@ -402,7 +424,7 @@ def calcular_votacoes(dd, deps, titulos):
         a = cod.setdefault(r.deputado_id, ["-"] * len(sel))
         a[idx[r.idVotacao]] = {"Sim": "S", "Não": "N", "Obstrução": "O", "Abstenção": "A", "Artigo 17": "P"}.get(r.voto, "-")
     COD = [[d["id"], "".join(cod.get(str(d["id"]), ["-"] * len(sel)))] for d in deps]
-    stats = {"plen_por_ano": R["meta"]["porAno"], "votacoes": len(ids), "votos": int(len(vv)), "placar": placar_ok}
+    stats = {"plen_por_ano": R["meta"]["porAno"], "votacoes": len(ids), "votos": int(len(vv)), "placar": placar_ok, "ult": ULT}
     return R, MX, DEPS, VY, sel, COD, stats
 
 
@@ -634,6 +656,10 @@ def main():
         titulos = json.load(open(os.path.join(RAIZ, "robo", "titulos_votacoes.json")))
         R, MX, DEPS, VY, VOT, COD, sv = calcular_votacoes(a.dados, deps, titulos)
         log(f"  {sv['votacoes']} votações nominais no plenário, {len(VOT)} votações principais divididas")
+        os.makedirs(os.path.join(saida, "u"), exist_ok=True)
+        for k in range(64):
+            json.dump({i: v for i, v in sv["ult"].items() if i % 64 == k}, open(os.path.join(saida, "u", f"{k}.json"), "w"),
+                      ensure_ascii=False, separators=(",", ":"))
         log("5/6 propostas")
         RES, PP, sp = calcular_propostas(a.dados, deps, saida)
         log(f"  {sp['propostas']:,} propostas, {sp['assinaturas']:,} assinaturas dos deputados atuais")

@@ -52,7 +52,13 @@ def ler_custos(texto, ano):
         gab = num(g.group(1))
         meses |= {MESES.index(m) + 1 for m, v in RE_MES.findall(g.group(2)) if num(v) > 0}
     sal = sum(subsidio(ano, m) for m in meses)
-    return [round(cota, 2), round(gab, 2), round(sal, 2), len(meses)]
+    mc, mg = [0.0] * 12, [0.0] * 12
+    for m, v in (RE_MES.findall(c.group(2)) if c else []):
+        mc[MESES.index(m)] = round(num(v), 2)
+    for m, v in (RE_MES.findall(g.group(2)) if g else []):
+        mg[MESES.index(m)] = round(num(v), 2)
+    # 5º item: gasto mês a mês [cota x12, gabinete x12] (usado na ficha do deputado)
+    return [round(cota, 2), round(gab, 2), round(sal, 2), len(meses), [mc, mg]]
 
 
 # ------------------------------------------------------------------ emendas
