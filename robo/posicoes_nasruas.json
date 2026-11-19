@@ -1,7 +1,94 @@
 {
  "_leia": "Posição do Movimento Nas Ruas em cada votação, definida pela coordenação na planilha 'Nota Nas Ruas — posição do movimento nas votações'. Enquanto 'ativa' for false, o site continua com a nota antiga (4 critérios). posicao: S ou N. peso: 1 a 3.",
- "ativa": false,
+ "ativa": true,
  "minimo_votacoes": 10,
- "pesos": {"alinhamento": 0.60, "custo": 0.20, "merito": 0.15, "presenca": 0.05},
- "votacoes": {}
+ "pesos": {
+  "alinhamento": 0.6,
+  "custo": 0.2,
+  "merito": 0.15,
+  "presenca": 0.05
+ },
+ "votacoes": {
+  "2580259-24": {
+   "posicao": "N",
+   "peso": 1
+  },
+  "2382675-97": {
+   "posicao": "N",
+   "peso": 1
+  },
+  "2351506-122": {
+   "posicao": "S",
+   "peso": 1
+  },
+  "2595984-34": {
+   "posicao": "N",
+   "peso": 1
+  },
+  "2578879-38": {
+   "posicao": "N",
+   "peso": 1
+  },
+  "2603342-42": {
+   "posicao": "N",
+   "peso": 1
+  },
+  "2562173-30": {
+   "posicao": "N",
+   "peso": 1
+  },
+  "2541109-88": {
+   "posicao": "N",
+   "peso": 1
+  },
+  "2482078-57": {
+   "posicao": "S",
+   "peso": 1
+  },
+  "2564274-37": {
+   "posicao": "N",
+   "peso": 1
+  },
+  "2270800-135": {
+   "posicao": "N",
+   "peso": 1
+  },
+  "2490985-54": {
+   "posicao": "N",
+   "peso": 1
+  },
+  "2515648-44": {
+   "posicao": "S",
+   "peso": 1
+  },
+  "2383019-54": {
+   "posicao": "N",
+   "peso": 1
+  },
+  "2463814-46": {
+   "posicao": "N",
+   "peso": 1
+  },
+  "2360457-45": {
+   "posicao": "N",
+   "peso": 1
+  },
+  "2485066-33": {
+   "posicao": "N",
+   "peso": 1
+  },
+  "2466108-33": {
+   "posicao": "N",
+   "peso": 1
+  },
+  "2438467-47": {
+   "posicao": "N",
+   "peso": 1
+  },
+  "2162802-89": {
+   "posicao": "N",
+   "peso": 1
+  }
+ },
+ "definido_em": "2026-11-19"
 }
