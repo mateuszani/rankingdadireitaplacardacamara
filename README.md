@@ -3,7 +3,7 @@
 O que cada um dos 513 deputados federais fez, só com dados oficiais da Câmara dos Deputados:
 presença no plenário, propostas separadas em grupos fáceis de entender, votos, com quem cada um vota junto,
 quanto custou o mandato, as emendas já pagas por setor, uma nota de 0 a 10 com regra pública, o comparativo entre dois deputados
-e o Custódromo com o gasto da Câmara no ano.
+e o Custômetro com o gasto da Câmara no ano.
 Um projeto do **movimento NasRuas**.
 
 **Site:** https://mateuszani.github.io/rankingdadireitaplacardacamara/
