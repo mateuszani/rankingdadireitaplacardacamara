@@ -412,7 +412,7 @@ def calcular_votacoes(dd, deps, titulos):
     import bisect
     # alinhamento com a posição do Nas Ruas (robo/posicoes_nasruas.json); faltar, abster ou obstruir conta como não alinhado
     NRC = carregar_posicoes()
-    ALIN = {}
+    ALIN, DET = {}, {}
     if NRC["votacoes"]:
         marc = {k: v for k, v in NRC["votacoes"].items() if k in data and v.get("posicao") in ("S", "N")}
         votos_dep = collections.defaultdict(dict)
@@ -424,6 +424,7 @@ def calcular_votacoes(dd, deps, titulos):
                 if not (s_["first"] <= data[k] <= s_["last"]):
                     continue  # fora do período em que o deputado votou no plenário
                 w = float(v.get("peso") or 1); n += 1; tot += w
+                DET.setdefault(int(dep), {})[k] = {"s": "S", "n": "N", "o": "O", "a": "A"}.get(votos_dep[dep].get(k), "-")
                 meu = {"s": "S", "n": "N"}.get(votos_dep[dep].get(k))
                 ok += w * (meu == v["posicao"])
             if n:
@@ -470,6 +471,15 @@ def calcular_votacoes(dd, deps, titulos):
         a[idx[r.idVotacao]] = {"Sim": "S", "Não": "N", "Obstrução": "O", "Abstenção": "A", "Artigo 17": "P"}.get(r.voto, "-")
     COD = [[d["id"], "".join(cod.get(str(d["id"]), ["-"] * len(sel)))] for d in deps]
     stats = {"plen_por_ano": R["meta"]["porAno"], "votacoes": len(ids), "votos": int(len(vv)), "placar": placar_ok, "ult": ULT, "alin": ALIN, "nr_marcadas": len(NRC["votacoes"])}
+    sel_m = {v[0]: v for v in sel}
+    NRV = []
+    for k, v in NRC["votacoes"].items():
+        if k not in data or v.get("posicao") not in ("S", "N"):
+            continue
+        s_ = sel_m.get(k)
+        NRV.append([k, data[k][:10], s_[2] if s_ else "", s_[6] if s_ else _txt(plen.descricao.get(k))[:200], v["posicao"], float(v.get("peso") or 1)])
+    NRV.sort(key=lambda x: x[1], reverse=True)
+    stats["nrv"], stats["det"] = NRV, DET
     return R, MX, DEPS, VY, sel, COD, stats
 
 
@@ -716,10 +726,14 @@ def main():
             log(f"  nota Nas Ruas: {len(NRC['votacoes'])} votações marcadas, {len(com)} deputados com nota nova"
                 + (f", média {sum(v[0] for v in com) / len(com):.1f}" if com else "") + ("" if NRC["ativa"] else " (ainda não ativa no site)"))
             if NRC["ativa"] and com:
-                NR = {"pesos": NRC["pesos"], "n": len([k for k, v in NRC["votacoes"].items() if v.get("posicao") in ("S", "N")]),
+                NR = {"pesos": NRC["pesos"], "n": len([k for k, v in NRC["votacoes"].items() if v.get("posicao") in ("S", "N")]), "v": sv["nrv"],
                       "minimo": NRC["minimo_votacoes"], "a": {i: v[1:] for i, v in NRn.items()}}
                 for r in NOTA:
                     r[1] = NRn[r[0]][0]
+                os.makedirs(os.path.join(saida, "n"), exist_ok=True)
+                for k in range(64):
+                    json.dump({i: v for i, v in sv["det"].items() if i % 64 == k}, open(os.path.join(saida, "n", f"{k}.json"), "w"),
+                              ensure_ascii=False, separators=(",", ":"))
         log(f"  custo dos mandatos: R$ {sc['custo_total']:,.2f}; emendas pagas: R$ {sc['emendas_pago']:,.2f}")
         atual = {"data": hoje.strftime("%d/%m/%Y"), "arquivos": meta,
                  "contagens": {"votacoes": sv["votacoes"], "votos": sv["votos"], "propostas": sp["propostas"],
