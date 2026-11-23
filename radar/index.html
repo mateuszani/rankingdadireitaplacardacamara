@@ -67,7 +67,7 @@ footer{border-top:1px solid rgba(255,255,255,.08);padding:26px 0 40px;color:var(
 @media(prefers-reduced-motion:reduce){*{transition:none!important}}
 #estado{margin-top:28px}#estado .eb{background:#0b2a1b;border:2px solid #FFDD00;border-radius:22px;padding:22px;color:#fff}
 #estado h2{margin:0 0 4px;font-size:clamp(24px,3.2vw,36px)}#estado .eg{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin:14px 0}
-#estado .eg div{background:rgba(255,255,255,.06);border-radius:14px;padding:12px}#estado .eg b{display:block;font:900 30px/1.1 var(--f,inherit);color:#FFDD00}
+#estado .eg div{background:rgba(255,255,255,.06);border-radius:14px;padding:12px}#estado .eg b{display:block;font-weight:900;font-size:34px;line-height:1.1;color:#FFDD00;margin-bottom:4px}
 #estado .ecol{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px}#estado h3{margin:10px 0 6px;font-size:17px}
 #estado .er{display:flex;align-items:center;gap:10px;padding:7px 0;border-bottom:1px solid rgba(255,255,255,.08);color:#fff;text-decoration:none}
 #estado .er .nt{margin-left:auto;font-weight:900;border-radius:8px;padding:2px 8px;min-width:44px;text-align:center}
@@ -163,7 +163,7 @@ function estado(uf){const box=$('#estado');if(!uf||!ALL.length){box.hidden=true;
   const part={};ps.forEach(p=>{(part[p.p]=part[p.p]||[]).push(p)});
   const pr=Object.entries(part).map(([k,v])=>[k,med(v),v.length]).filter(x=>x[1].n).sort((a,b)=>b[1].m-a[1].m);
   const row=p=>`<a class="er" href="${CASA[p.c].url}#d-${p.id}"><span><b>${p.n}</b><br><small style="opacity:.8">${CASA[p.c].t} · ${p.p}</small></span><span class="nt" style="background:${cor(p.nt)};color:${tc(p.nt)}">${f1(p.nt)}</span></a>`;
-  box.innerHTML=`<div class="eb"><h2>Bancada de ${UFN[uf]}</h2><p style="margin:0;opacity:.85">Nota Nas Ruas de 0 a 10, mandatos de 2023 a 2026, dados oficiais atualizados em ${META.camara?.data||'—'}. A média só conta quem tem nota.</p>
+  box.innerHTML=`<div class="eb"><h2>Bancada · ${UFN[uf]}</h2><p style="margin:0;opacity:.85">Nota Nas Ruas de 0 a 10, mandatos de 2023 a 2026, dados oficiais atualizados em ${META.camara?.data||'—'}. A média só conta quem tem nota.</p>
   <div class="eg"><div><b>${f1(all.m)}</b>média da bancada (${all.n} parlamentares)</div><div><b>${f1(mc.m)}</b>média dos deputados (${mc.n} de ${dep.length})</div><div><b>${f1(ms.m)}</b>média dos senadores (${ms.n} de ${sen.length})</div></div>
   <div class="ecol"><div><h3>Maiores notas</h3>${top.map(row).join('')||'<p>—</p>'}</div><div><h3>Menores notas</h3>${bot.map(row).join('')||'<p>—</p>'}</div>
   <div><h3>Média por partido no estado</h3><table><thead><tr><th>Partido</th><th>Média</th><th>Com nota</th></tr></thead><tbody>${pr.map(([k,m,t])=>`<tr><td>${k}</td><td><b>${f1(m.m)}</b></td><td>${m.n} de ${t}</td></tr>`).join('')}</tbody></table></div></div>
@@ -177,8 +177,8 @@ async function cardUF(uf,all,mc,ms,top,bot){try{await document.fonts.ready}catch
   const gr=g.createLinearGradient(0,0,0,H);gr.addColorStop(0,'#123A27');gr.addColorStop(1,'#071C12');g.fillStyle=gr;g.fillRect(0,0,W,H);
   g.fillStyle='#009639';g.fillRect(0,0,W*.7,14);g.fillStyle='#FFDD00';g.fillRect(W*.7,0,W*.3,14);g.textAlign='center';
   g.fillStyle='#FFDD00';g.font=F(900,30);g.fillText('RADAR NAS RUAS · CONGRESSO',W/2,80);
-  g.fillStyle='#fff';let px=72;g.font=F(900,px);while(g.measureText('BANCADA DE '+UFN[uf].toUpperCase()).width>W-100&&px>36){px-=4;g.font=F(900,px)}g.fillText('BANCADA DE '+UFN[uf].toUpperCase(),W/2,170);
-  g.fillStyle='#FFDD00';g.font=F(900,170);g.fillText(f1(all.m),W/2,350);g.fillStyle='rgba(255,255,255,.85)';g.font=F(700,28);g.fillText(`média da Nota Nas Ruas · ${all.n} parlamentares`,W/2,400);
+  g.fillStyle='#fff';let px=72;g.font=F(900,px);while(g.measureText(UFN[uf].toUpperCase()).width>W-100&&px>36){px-=4;g.font=F(900,px)}g.fillText(UFN[uf].toUpperCase(),W/2,170);
+  g.fillStyle='#FFDD00';g.font=F(900,170);g.fillText(f1(all.m),W/2,350);g.fillStyle='rgba(255,255,255,.85)';g.font=F(700,28);g.fillText(`média da bancada na Nota Nas Ruas · ${all.n} parlamentares`,W/2,400);
   g.font=F(700,26);g.fillText(`Deputados ${f1(mc.m)}   ·   Senadores ${f1(ms.m)}`,W/2,445);
   const lst=(t,arr,y)=>{g.textAlign='left';g.fillStyle='#FFDD00';g.font=F(900,32);g.fillText(t,80,y);y+=20;arr.forEach(p=>{y+=82;g.fillStyle='rgba(255,255,255,.07)';g.beginPath();g.roundRect(70,y-58,W-140,72,16);g.fill();
     g.fillStyle='#fff';let s=34;g.font=F(800,s);const nm=p.n;while(g.measureText(nm).width>W-420&&s>20){s-=2;g.font=F(800,s)}g.fillText(nm,96,y-12);g.font=F(600,22);g.fillStyle='rgba(255,255,255,.75)';g.fillText(CASA[p.c].t+' · '+p.p,96,y+12-6);
