@@ -168,7 +168,7 @@ function estado(uf){const box=$('#estado');if(!uf||!ALL.length){box.hidden=true;
   <div class="ecol"><div><h3>Maiores notas</h3>${top.map(row).join('')||'<p>—</p>'}</div><div><h3>Menores notas</h3>${bot.map(row).join('')||'<p>—</p>'}</div>
   <div><h3>Média por partido no estado</h3><table><thead><tr><th>Partido</th><th>Média</th><th>Com nota</th></tr></thead><tbody>${pr.map(([k,m,t])=>`<tr><td>${k}</td><td><b>${f1(m.m)}</b></td><td>${m.n} de ${t}</td></tr>`).join('')}</tbody></table></div></div>
   <button class="ebtn" id="ecard" type="button">Baixar card do estado (JPEG)</button><button class="ebtn o" id="elink" type="button">Copiar link desta página</button>
-  <a class="ebtn o" href="/radarnasruascamarafederal/#buscar">O que pediram para ${UFN[uf]}</a></div>`;
+  <a class="ebtn o" href="/radarnasruascamarafederal/#buscar-${uf}">O que pediram para ${UFN[uf]}</a></div>`;
   box.hidden=false;
   $('#elink').onclick=async()=>{const u=location.origin+location.pathname+'#uf-'+uf;try{await navigator.clipboard.writeText(u);$('#elink').textContent='Link copiado!'}catch(e){prompt('Copie o link:',u)}};
   $('#ecard').onclick=()=>cardUF(uf,all,mc,ms,top,bot)}
